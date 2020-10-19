@@ -1,6 +1,39 @@
+//Server Config
+const port = process.env.PORT || 3000
 const express = require('express')
+const app = express()
 const path = require('path')
 const http = require('http')
+const server = http.createServer(app)
+const cors = require('cors')
+const io = require('socket.io')(5000)
+
+//Server Config
+app.use(cors())
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
+
+//Dotenv
+
+require('dotenv').config({ path: './.env' })
+
+//Auth Imports
+
+const passport = require('passport')
+const session = require('express-session')
+const localPassport = require('./config/passport-local')
+const googlePassport = require('./config/passport-google')
+
+app.use(passport.initialize())
+app.use(passport.session())
+
+//Database Imports
+
+const database = require('./config/db')
+const mongoose = require('mongoose')
+const MongoStore = require('connect-mongo')(session);
+
+//SocketIO Helper Functions
 const formatMessage = require('./utils/messages')
 const {
     userJoin,
@@ -9,47 +42,20 @@ const {
     getRoomUsers,
     getUserRooms
 } = require('./utils/users')
-const where = require('node-where')
-const cors = require('cors')
-const mongoose = require('mongoose');
-const app = express()
-const server = http.createServer(app)
-require('dotenv').config({ path: './.env' })
-const port = process.env.PORT || 3000
-const database = require('./config/db')
-const dashboardRouter = require('./routes/dashboard.router')
 
-app.get('/dashboard', dashboardRouter)
+//Routes
 
-app.use(cors())
-app.use(express.json())
+const router = express.Router()
+const dashboardRouter = require('./routes/user.route')
 
-//LocationMiddleware
+app.use('/', router)
+app.use('/dashboard', dashboardRouter)
 
-const botName = (req, res, next) => {
-    where.is(req.ip, function (err, result) {
-        if (result) {
-            const cityName = result.get('city')
-            console.log(cityName)
-            const stateName = result.get('region')
-            const zipCode = result.get('\n postalCode')
-            const adress = cityName + stateName + zipCode
-            req.geoip = adress
-        }
-        if (err) {
-            res.status(500).send(err.message ? err.message : 'location error')
-            next(err)
-        }
-        next()
-    })
-}
+//Location Middleware
+const location = require('./utils/location')
+app.use(location)
 
-app.use(botName)
-console.log(botName)
-
-//Socket
-
-const io = require('socket.io')(5000)
+//SocketIO
 io.use((socket, next) => {
     if(isValid(socket.request)) {
         next()
@@ -58,9 +64,6 @@ io.use((socket, next) => {
     }
 })
 
-const rooms = {}
-
-//admin
 const adminNameS = io.of('/admin')
 
 adminNameS.use(async (socket, next) => {
@@ -73,43 +76,15 @@ adminNameS.use(async (socket, next) => {
     }
 })
 
-//custom NameSpaces (Groups/Teams/Tags)
-
 const customNameS = io.of(/[^A-Za-z0-9]+/g)
 
 io.on('connection', socket => {
-    const customName = socket.nsp
-    socket.on('joinRoom', ({ username, room }) => {
-        const user = userJoin(socket.id, username, room)
+    const customNameS = socket.nsp
+    require('./socketio')(socket)
 
-        socket.join(user.room)
-
-        socket.to(user.room).emit('message', formatMessage(req.geoip, 'Live Chat, \n Connect with People'))
-
-        socket.broadcast.to(user.room).emit('message', formatMessage(req.geoip, `${user.username} has joined the chat`))
-    })
-
-    socket.on('new-user', (room, name) => {
-        socket.join(room)
-        rooms[room].users[socket.id] = name
-        socket.to(room).broadcast.to('user-connected', name)
-    })
-    socket.on('send-message', () => {
-        socket.to(room).broadcast.emit('chat-message', {
-            message: message,
-            name: rooms
-            [room]
-                .users
-            [socket.id]
-        })
-    })
-    socket.on('disconnect', () => {
-        getUserRooms(socket).forEach(room => {
-            socket.to(room).broadcast.emit('user-disconnected', rooms[room].users[socket.id])
-            delete rooms[room].users[socket.id]
-        })
-    })
+    return io
 })
+//Start the Server
 
 app.listen(port, () => {
     console.log(`Server started on ${port}`)

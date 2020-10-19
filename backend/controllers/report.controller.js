@@ -2,7 +2,7 @@ const Report = require('../models/report.model')
 
 const bcrypt = require('bcrypt')
 
-exports.createReporter = (req, res) => {
+exports.createReport = (req, res) => {
     if(!req.body.rateOfReport || !req.body.location) {
         return res.status(400).send({
             message: "Fill in the required fiels"

@@ -1,4 +1,4 @@
-const User = require('./models/reports.model')
+const User = require('../models/user.model')
 
 const bcrypt = require('bcrypt')
 
@@ -22,18 +22,18 @@ exports.createUser = (req, res) => {
         pronoun: req.body.details.pronoun,
         nationality: req.body.details.nationality
     })
-}
 
-user.save()
-    .then((data) => {
-        res.send(data)
-    })
-    .catch((err) => {
-        res.status(500).send({
-            message: err.message || "Couldn't save the User for some reason  ¯\_(ツ)_/¯"
+
+    user.save()
+        .then((data) => {
+            res.send(data)
         })
-    })
-
+        .catch((err) => {
+            res.status(500).send({
+                message: err.message || "Couldn't save the User for some reason  ¯\_(ツ)_/¯"
+            })
+        })
+}
 //Read METHODS
 
 //Finding an user with id

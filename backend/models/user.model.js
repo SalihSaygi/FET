@@ -1,4 +1,4 @@
-const mongoose = require('../config/db')
+const mongoose = require('mongoose')
 const bcrypt = require('bcrypt')
 
 const UserSchema = mongoose.Schema({
@@ -34,6 +34,7 @@ const UserSchema = mongoose.Schema({
         maxlength: 11,
     },
     currentRank: {
+        type: String,
         required: true,
         enum: [
             'Newbie',
@@ -76,7 +77,7 @@ const UserSchema = mongoose.Schema({
             type: String,
             trim: true
         }
-}],
+},],
     reports: [{type: mongoose.Schema.Types.ObjectId, ref: 'Report'}]
 }, {
     timestamps: true,
@@ -96,8 +97,8 @@ UserSchema.pre('save', function(next){
 
 UserSchema.methods.comparePassword = function comparePassword(candidatePassword, cb) {
     bcrypt.compare(candidatePassword, this.password, (err, isMatch) => {
-      cb(err, isMatch)
-    })
-}
+      cb(err, isMatch);
+    });
+};
 
 module.export = User = mongoose.model('User', UserSchema)
