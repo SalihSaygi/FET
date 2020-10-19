@@ -55,6 +55,14 @@ app.use('/dashboard', dashboardRouter)
 const location = require('./utils/location')
 app.use(location)
 
+//Google Config
+const initializePassport = require('./config/passport-google')
+initializePassport(
+  passport,
+  email => users.find(user => user.email === email),
+  id => users.find(user => user.id === id)
+)
+
 //SocketIO
 io.use((socket, next) => {
     if(isValid(socket.request)) {
