@@ -1,4 +1,7 @@
 //Server Config
+if (process.env.NODE_ENV === 'development') {
+    app.use(morgan('dev'))
+}  
 const port = process.env.PORT || 3000
 const express = require('express')
 const app = express()
@@ -34,25 +37,27 @@ const mongoose = require('mongoose')
 const MongoStore = require('connect-mongo')(session);
 
 //SocketIO Helper Functions
-const formatMessage = require('./utils/messages')
+const formatMessage = require('./chatUtils/messages')
 const {
     userJoin,
     getCurrentUser,
     userLeave,
     getRoomUsers,
     getUserRooms
-} = require('./utils/users')
+} = require('./chatUtils/users')
 
 //Routes
+
+const { ensureUser, ensureGuest } = require('./config/auth')
 
 const router = express.Router()
 const dashboardRouter = require('./routes/user.route')
 
-app.use('/', router)
-app.use('/dashboard', dashboardRouter)
+app.use('/', ensureGuest, router)
+app.use('/dashboard', ensureUser, dashboardRouter)
 
 //Location Middleware
-const location = require('./utils/location')
+const location = require('./chatUtils/location')
 app.use(location)
 
 //Google Config

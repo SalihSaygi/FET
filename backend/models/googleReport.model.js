@@ -1,6 +1,6 @@
 const mongoose = require('../config/db')
 
-const ReportSchema = mongoose.Schema({
+const GoogleReportSchema = mongoose.Schema({
     rateOfReport: {
         type: Number,
         required: true,
@@ -25,9 +25,9 @@ const ReportSchema = mongoose.Schema({
         type: String,
         required: false,
     },
-    reportedBy:  {type: mongoose.Schema.Types.ObjectId, ref: 'User'}
+    reportedBy:  {type: mongoose.Schema.Types.ObjectId, ref: 'googleUser'}
 }, {
     timestamps: true,
 })
 
-module.exports = Report = mongoose.model('Report', ReportSchema)
+module.exports = googleReport = mongoose.model('googleReport', GoogleReportSchema)
