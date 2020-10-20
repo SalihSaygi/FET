@@ -1,8 +1,4 @@
 //Server Config
-if (process.env.NODE_ENV === 'development') {
-    app.use(morgan('dev'))
-}  
-const port = process.env.PORT || 3000
 const express = require('express')
 const app = express()
 const path = require('path')
@@ -19,6 +15,7 @@ app.use(express.urlencoded({ extended: true }))
 //Dotenv
 
 require('dotenv').config({ path: './.env' })
+const port = process.env.PORT || 3000
 
 //Auth Imports
 
@@ -35,16 +32,6 @@ app.use(passport.session())
 const database = require('./config/db')
 const mongoose = require('mongoose')
 const MongoStore = require('connect-mongo')(session);
-
-//SocketIO Helper Functions
-const formatMessage = require('./chatUtils/messages')
-const {
-    userJoin,
-    getCurrentUser,
-    userLeave,
-    getRoomUsers,
-    getUserRooms
-} = require('./chatUtils/users')
 
 //Routes
 
@@ -98,7 +85,11 @@ io.on('connection', socket => {
     return io
 })
 //Start the Server
+const ejs = require('ejs')
 
+router.get('/', function (req, res) {
+    res.render('./view/user.create.ejs');
+})
 app.listen(port, () => {
     console.log(`Server started on ${port}`)
 })

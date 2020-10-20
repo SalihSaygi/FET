@@ -5,6 +5,6 @@ const { ensureAdmin } = require('../config/auth')
 
 const dataRouter = require('./dashboard.router')
 
-dashboardRouter.use('/data', ensureAdmin, dataRouter)
+dashboardRouter.use('/data', dataRouter)
 
 module.exports = dashboardRouter

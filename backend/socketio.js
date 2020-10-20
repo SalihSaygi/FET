@@ -1,4 +1,15 @@
+const io = require('socket.io-client')
+
 const rooms = {}
+
+const formatMessage = require('./chatUtils/messages')
+const {
+    userJoin,
+    getCurrentUser,
+    userLeave,
+    getRoomUsers,
+    getUserRooms
+} = require('./chatUtils/users')
 
 module.exports = function(socket) {
 
