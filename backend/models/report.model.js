@@ -25,7 +25,7 @@ const ReportSchema = mongoose.Schema({
         type: String,
         required: false,
     },
-    reportedBy:  {type: mongoose.Schema.Types.ObjectId, ref: 'User'}
+    reportedBy:  [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}]
 }, {
     timestamps: true,
 })

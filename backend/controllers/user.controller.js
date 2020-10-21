@@ -1,5 +1,4 @@
 const User = require('../models/user.model')
-const mongoose = require('mongoose')
 const bcrypt = require('bcrypt')
 
 exports.createUser = (req, res) => {

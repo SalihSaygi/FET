@@ -25,7 +25,7 @@ const GoogleReportSchema = mongoose.Schema({
         type: String,
         required: false,
     },
-    reportedBy:  {type: mongoose.Schema.Types.ObjectId, ref: 'googleUser'}
+    reportedBy:  [{type: mongoose.Schema.Types.ObjectId, ref: 'googleUser'}]
 }, {
     timestamps: true,
 })

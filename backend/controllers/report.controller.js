@@ -1,5 +1,5 @@
 const Report = require('../models/report.model')
-
+const mongoose = require('mongoose')
 const bcrypt = require('bcrypt')
 
 exports.createReport = (req, res) => {

@@ -3,7 +3,7 @@ const dashboardRouter = express.Router()
 
 const { ensureAdmin } = require('../config/auth')
 
-const dataRouter = require('./dashboard.router')
+const dataRouter = require('./data.router')
 
 dashboardRouter.use('/data', dataRouter)
 

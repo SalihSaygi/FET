@@ -1,37 +1,58 @@
 //Server Config
 const express = require('express')
-const app = express()
 const path = require('path')
 const http = require('http')
-const server = http.createServer(app)
 const cors = require('cors')
 const io = require('socket.io')(5000)
-
+require('dotenv').config({ path: '.env' })
+const cookieSession = require("cookie-session");
+const passport = require('passport')
+const session = require('express-session')
+const localPassport = require('./config/passport-local')
+require('./config/passport-google')(passport)
+const mongoose = require('mongoose')
+const database = require('./config/db')
+const MongoStore = require('connect-mongo')(session)
+const app = express()
+const server = http.createServer(app)
 //Server Config
 app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
-//Dotenv
+app.use(cookieSession({
+    maxAge: 24*60*60*1000,
+    //one day
+    keys:[process.env.Cookie_KEY]
+  }));
 
-require('dotenv').config({ path: './.env' })
+app.use(
+    session({
+      secret: process.env.SECRET_SESSION,
+      resave: false,
+      saveUninitialized: false,
+      store: new MongoStore({ mongooseConnection: mongoose.connection }),
+    })
+)
+
 const port = process.env.PORT || 3000
 
 //Auth Imports
 
-const passport = require('passport')
-const session = require('express-session')
-const localPassport = require('./config/passport-local')
-const googlePassport = require('./config/passport-google')
+
+
+localPassport(
+    passport,
+    email => users.find(user => user.email === email),
+    id => users.find(user => user.id === id)
+)
 
 app.use(passport.initialize())
 app.use(passport.session())
 
 //Database Imports
 
-const database = require('./config/db')
-const mongoose = require('mongoose')
-const MongoStore = require('connect-mongo')(session);
+;
 
 //Routes
 
@@ -39,21 +60,15 @@ const { ensureUser, ensureGuest } = require('./config/auth')
 
 const router = express.Router()
 const dashboardRouter = require('./routes/user.route')
+const googleAuthRouter = require('./routes/googleAuth.router')
 
 app.use('/', ensureGuest, router)
 app.use('/dashboard', ensureUser, dashboardRouter)
+app.use('auth', googleAuthRouter)
 
 //Location Middleware
 const location = require('./chatUtils/location')
 app.use(location)
-
-//Google Config
-const initializePassport = require('./config/passport-google')
-initializePassport(
-  passport,
-  email => users.find(user => user.email === email),
-  id => users.find(user => user.id === id)
-)
 
 //SocketIO
 io.use((socket, next) => {
@@ -84,12 +99,7 @@ io.on('connection', socket => {
 
     return io
 })
-//Start the Server
-const ejs = require('ejs')
 
-router.get('/', function (req, res) {
-    res.render('./view/user.create.ejs');
-})
 app.listen(port, () => {
     console.log(`Server started on ${port}`)
 })

@@ -1,4 +1,4 @@
-const mongoose = require('mongoose')
+const mongoose = require('../config/db')
 const bcrypt = require('bcrypt')
 
 const UserSchema = mongoose.Schema({
@@ -56,9 +56,6 @@ const UserSchema = mongoose.Schema({
         trim: true,
         minlength: 1,
         maxlength: 2,
-    },
-    googleId: {
-        type: String,
     },
     profilePhoto: {
         type: String

@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const express = require('express')
 const app = express()
 const session = require('express-session')
-require('dotenv').config({ path: '/backend/.env' })
+require('dotenv').config({ path: '.env' })
 const MongoStore = require('connect-mongo')(session)
 const URI = process.env.URI
 mongoose.connect(URI, { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true })
@@ -18,3 +18,5 @@ app.use(session({
     saveUninitialized: true,
     store: sessionStore
 }))
+
+module.exports = mongoose
