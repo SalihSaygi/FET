@@ -47,9 +47,6 @@ localPassport(
     id => users.find(user => user.id === id)
 )
 
-app.use(passport.initialize())
-app.use(passport.session())
-
 //Database Imports
 
 ;
@@ -99,6 +96,9 @@ io.on('connection', socket => {
 
     return io
 })
+
+app.use(passport.initialize())
+app.use(passport.session())
 
 app.listen(port, () => {
     console.log(`Server started on ${port}`)

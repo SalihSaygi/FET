@@ -1,12 +1,19 @@
 const mongoose = require('../config/db')
 const bcrypt = require('bcrypt')
 
+const opts = { toJSON: { virtuals: true } }
+
 const UserSchema = mongoose.Schema({
-    
-    firstName: {
+    nickname: {
         type: String,
         required: true,
         unique: true,
+        trim: true,
+        minlength: 3,
+    },
+    firstName: {
+        type: String,
+        required: true,
         trim: true,
         minlength: 3,
     },
@@ -25,6 +32,8 @@ const UserSchema = mongoose.Schema({
         type: String,
         required: true,
         minlength: 7,
+        match: [/.+\@.+\..+/, 'Please fill a valid email address'],
+        unique: true
     },
     phoneNumber: {
         type: Number,
@@ -38,29 +47,32 @@ const UserSchema = mongoose.Schema({
         required: true,
         enum: [
             'Newbie',
-            'Experienced', 
-            'Unfortunate', 
-            'Main Character', 
-            'Protector of Streets',
-            'Detective', 
-            'Sherlock']
+            'Animal Lover', 
+            'Finder of the Losts', 
+            'Animal Detective',
+        ]
     },
     role: {
         type: String,
-        enum: ['user', 'admin'],
+        enum: ['user', 'admin', 'developer', 'animalControl', 'dbModerator'],
         required: true
     },
     adress: {
         type: String,
-        required: true,
+        required: false,
         trim: true,
         minlength: 1,
         maxlength: 2,
     },
-    profilePhoto: {
-        type: String
+    numberOfFindings: {
+        type: Number, 
+        required: true,
     },
-    details: [
+    profilePhoto: {
+        data: Buffer,
+        contentType: String
+    },
+    details: 
         {
         age: {
             type: Number,
@@ -74,11 +86,19 @@ const UserSchema = mongoose.Schema({
             type: String,
             trim: true
         }
-},],
+},
     reports: [{type: mongoose.Schema.Types.ObjectId, ref: 'Report'}]
 }, {
     timestamps: true,
 })
+
+userSchema.virtual('fullName').
+  get(function() { return `${this.firstName} ${this.lastName}`; }).
+  set(function(v) {
+    const firstName = v.substring(0, v.indexOf(' '));
+    const lastName = v.substring(v.indexOf(' ') + 1);
+    this.set({ firstName, lastName });
+  })
 
 UserSchema.pre('save', function(next){
     if(!this.isModified('password')) return next()

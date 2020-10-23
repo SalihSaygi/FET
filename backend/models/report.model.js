@@ -1,12 +1,16 @@
 const mongoose = require('../config/db')
 
 const ReportSchema = mongoose.Schema({
-    rateOfReport: {
+    animalType: {
         type: Number,
         required: true,
         trim: true,
-        minlength: 1,
-        minlength: 2,
+        select: false
+    },
+    bounty: {
+        type: Number,
+        required: true,
+        trim: true,
         select: false
     },
     location: {
@@ -21,11 +25,19 @@ const ReportSchema = mongoose.Schema({
         trim: true,
         select: false
     },
-    imageURL: {
-        type: String,
-        required: false,
+    imageOrVideo: {
+        data: Buffer,
+        contentType: String
     },
-    reportedBy:  [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}]
+    interest: [{
+        type: mongoose.Schema.ObjectId, ref: 'User'
+    }],
+    comments: [{
+        text: String,
+        created: { type: Date, default: Date.now },
+        postedBy: { type: mongoose.Schema.ObjectId, ref: 'User'}
+    }],
+    reportedBy:  {type: mongoose.Schema.Types.ObjectId, ref: 'User'}
 }, {
     timestamps: true,
 })
