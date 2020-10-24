@@ -23,6 +23,12 @@ import styles from "../../sources/jss/loginPage";
 
 import image from "../../sources/images/signBackground.jpg";
 
+import GoogleLogin from 'react-google-login'
+
+const responseGoogle = (response) => {
+    console.log(response);
+  }
+
 const useStyles = makeStyles(styles);
 
 export default function LoginPage(props) {
@@ -64,32 +70,20 @@ export default function LoginPage(props) {
                         color="transparent"
                         onClick={e => e.preventDefault()}
                       >
-                        <i className={"fab fa-twitter"} />
-                      </Button>
-                      <Button
-                        justIcon
-                        href="#pablo"
-                        target="_blank"
-                        color="transparent"
-                        onClick={e => e.preventDefault()}
-                      >
-                        <i className={"fab fa-facebook"} />
-                      </Button>
-                      <Button
-                        justIcon
-                        href="#pablo"
-                        target="_blank"
-                        color="transparent"
-                        onClick={e => e.preventDefault()}
-                      >
-                        <i className={"fab fa-google-plus-g"} />
+                        <GoogleLogin
+                        clientId="506409305581-0fli2rf5n3rfbir6mvd82kb5oce6oek1.apps.googleusercontent.com"
+                        buttonText="Google Login"
+                        onSuccess={responseGoogle}
+                        onFailure={responseGoogle}
+                        cookiePolicy={'single_host_origin'}
+                    />
                       </Button>
                     </div>
                   </CardHeader>
                   <p className={classes.divider}>Or Be Classical</p>
                   <CardBody>
                     <CustomInput
-                      labelText="First Name../common."
+                      labelText="First Name"
                       id="first"
                       formControlProps={{
                         fullWidth: true
@@ -104,7 +98,7 @@ export default function LoginPage(props) {
                       }}
                     />
                     <CustomInput
-                      labelText="Email../common."
+                      labelText="Email"
                       id="email"
                       formControlProps={{
                         fullWidth: true
