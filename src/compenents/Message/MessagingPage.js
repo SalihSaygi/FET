@@ -1,6 +1,6 @@
 import React from 'react'
-import { useConversations } from '../contexts/ConversationsProvider'
-import { useContacts } from '../contexts/ContactsProvider'
+import { useConversations } from './contexts/ConversationsProvider'
+import { useContacts } from './contexts/ContactsProvider'
 import OpenContact from './OpenContact'
 import OpenConversation from './OpenConversation'
 import Sidebar from './Sidebar'

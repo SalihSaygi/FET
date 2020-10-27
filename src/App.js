@@ -5,29 +5,14 @@ import LoginPage from './compenents/Sign/LoginPage'
 // import Navbar from './compenents/common/Navbar'
 import RegisterPage from './compenents/Sign/RegisterPage'
 import useLocalStorage from './hooks/useLocalStorage';
-import MessagingPage from './components/Message/MessagingPage'
+import MessagingPage from './compenents/Message/MessagingPage'
 import { ContactsProvider } from './contexts/ContactsProvider'
 import { ConversationsProvider } from './contexts/ConversationsProvider';
 import { SocketProvider } from './contexts/SocketProvider';
 
 function App() {
 
-  const MessagingDashboard = (
-    <SocketProvider id={id}>
-      <ContactsProvider>
-        <ConversationsProvider id={id}>
-          <MessagingPage id={id} />
-        </ConversationsProvider>
-      </ContactsProvider>
-    </SocketProvider>
-  )
-
-  return (
-    dashboard
-  )
-}
-
-function App() {
+  const [id, setId] = useLocalStorage('id')
 
   const MessagingDashboard = (
     <SocketProvider id={id}>
@@ -51,7 +36,7 @@ function App() {
         <Route path="/users" component={CreateUser} />
         <Route path="/reports" component={CreateUser} />
         <Route path="/login" component={CreateUser} /> */ }
-        <Route path="/message" component={MessagingDasboard} />
+        <Route path="/message" component={MessagingDashboard} />
         <Route path="/register" component={RegisterPage} />
         <Route path="/login" component={LoginPage} />
         </div>

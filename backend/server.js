@@ -5,14 +5,14 @@ const http = require('http')
 const cors = require('cors')
 const io = require('socket.io')(5000)
 require('dotenv').config({ path: '.env' })
-const cookieSession = require("cookie-session");
 const passport = require('passport')
 const session = require('express-session')
 const localPassport = require('./config/passport-local')
-require('./config/passport-google')(passport)
+const googlePassport = require('./config/passport-google')
 const mongoose = require('mongoose')
 const database = require('./config/db')
 const MongoStore = require('connect-mongo')(session)
+const { connection } = require('./config/db')
 const app = express()
 const server = http.createServer(app)
 //Server Config
@@ -20,18 +20,17 @@ app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
-app.use(cookieSession({
-    maxAge: 24*60*60*1000,
-    //one day
-    keys:[process.env.Cookie_KEY]
-  }));
+const sessionStore = new MongoStore({ mongooseConnection: connection, collection: 'sessions' })
 
 app.use(
     session({
       secret: process.env.SECRET_SESSION,
       resave: false,
-      saveUninitialized: false,
-      store: new MongoStore({ mongooseConnection: mongoose.connection }),
+      saveUninitialized: true,
+      store: sessionStore,
+      cookie: {
+        maxAge: 24*60*60*1000
+    }
     })
 )
 
@@ -47,10 +46,6 @@ localPassport(
     id => users.find(user => user.id === id)
 )
 
-//Database Imports
-
-;
-
 //Routes
 
 const { ensureUser, ensureGuest } = require('./config/auth')
@@ -61,7 +56,15 @@ const googleAuthRouter = require('./routes/googleAuth.router')
 
 app.use('/', ensureGuest, router)
 app.use('/dashboard', ensureUser, dashboardRouter)
-app.use('auth', googleAuthRouter)
+app.use('/auth', googleAuthRouter)
+
+app.post('/login',
+  passport.authenticate(['local', 'passport-google-oauth']),
+     function(req, res) {
+       // If this function gets called, authentication was successful.
+       // `req.user` contains the authenticated user.
+       res.redirect('/users/' + req.user.username)
+})
 
 //Location Middleware
 const location = require('./chatUtils/location')

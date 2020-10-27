@@ -1,6 +1,6 @@
 import React, { useState, useCallback} from 'react'
 import { Form, InputGroup, Button, Modal } from 'react-bootstrap'
-import { useContacts } from '../contexts/ContactsProvider'
+import { useContacts } from './contexts/ContactsProvider'
 
 export default function OpenContact(props) {
     const [requestMessage, setRequestMessage] = useState('')

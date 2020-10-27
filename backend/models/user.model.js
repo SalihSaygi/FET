@@ -28,6 +28,8 @@ const UserSchema = mongoose.Schema({
         required: true,
         minlength: 8,
     },
+    hash: String,
+    salt: String,
     email: {
         type: String,
         required: true,
@@ -41,6 +43,7 @@ const UserSchema = mongoose.Schema({
         trim: true,
         minlength: 10,
         maxlength: 11,
+        unique: true
     },
     currentRank: {
         type: String,
@@ -92,7 +95,7 @@ const UserSchema = mongoose.Schema({
     timestamps: true,
 })
 
-userSchema.virtual('fullName').
+UserSchema.virtual('fullName').
   get(function() { return `${this.firstName} ${this.lastName}`; }).
   set(function(v) {
     const firstName = v.substring(0, v.indexOf(' '));

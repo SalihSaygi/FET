@@ -1,21 +1,32 @@
 const User = require('../models/user.model')
 const bcrypt = require('bcrypt')
 
+
+
 exports.createUser = (req, res) => {
+
+    const saltHash = genPassword(req.body.password)
+    const salt = saltHash.salt;
+    const hash = saltHash.hash;
+
     if(!req.body.email || !req.body.password || !req.body.firstName || !req.body.lastName) {
         return res.status(400).json({
             message: "Fill in the required fields"
         })
     }
     const user = new User({
+        nickname: req.body.nickname,
         firstName: req.body.firstName,
         lastName: req.body.lastName,
         password: bcrypt.hashSync(req.body.password, 10),
+        hash: hash,
+        salt: salt,
         email: req.body.email,
         phoneNumber: req.body.phoneNumber,
         currentRank: req.body.currentRank,
         role: req.body.role,
         adress: req.body.adress,
+        numberOfFindings: req.body.numberOfFindings,
         profilePhoto: req.body.profilePhoto,
         age: req.body.details.age,
         pronoun: req.body.details.pronoun,
@@ -111,14 +122,24 @@ exports.updateUser = (req, res) => {
         .then((user) => {
             if(!user) {
                 return res.status(404).json({
-                    message: "Couldn't find the user with id: " + req.params.id,
+                    message: "Couldn't find the user with id: " + req.params.userId,
                 })
             }
             res.status(200).json(user)
         })
         .catch((err) => {
             return res.status(200).json(
-                { message: err + "\n| Found it but couldn't retrieve the user with id: " + req.params.id + " |" }
+                { message: err + "\n| Found it but couldn't retrieve the user with id: " + req.params.userId + " |" }
             )
         })
+}
+
+function genPassword(password) {
+    var salt = crypto.randomBytes(32).toString('hex');
+    var genHash = crypto.pbkdf2Sync(password, salt, 10000, 64, 'sha512').toString('hex');
+    
+    return {
+      salt: salt,
+      hash: genHash
+    };
 }
