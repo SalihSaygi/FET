@@ -33,16 +33,16 @@ export default function Footer(props) {
           <List className={classes.list}>
             <ListItem className={classes.inlineBlock}>
               <a
-                href="https://www.creative-tim.com/?ref=mkr-footer"
+                href="localhost:3000/contact"
                 className={classes.block}
                 target="_blank"
               >
-                Creative Tim
+                Contact
               </a>
             </ListItem>
             <ListItem className={classes.inlineBlock}>
               <a
-                href="https://www.creative-tim.com/presentation?ref=mkr-footer"
+                href="localhost:3000/aboutus"
                 className={classes.block}
                 target="_blank"
               >
@@ -51,16 +51,16 @@ export default function Footer(props) {
             </ListItem>
             <ListItem className={classes.inlineBlock}>
               <a
-                href="http://blog.creative-tim.com/?ref=mkr-footer"
+                href="localhost:3000/QA"
                 className={classes.block}
                 target="_blank"
               >
-                Blog
+                Q&A
               </a>
             </ListItem>
             <ListItem className={classes.inlineBlock}>
               <a
-                href="https://www.creative-tim.com/license?ref=mkr-footer"
+                href="localhost:3000/license"
                 className={classes.block}
                 target="_blank"
               >
@@ -70,14 +70,14 @@ export default function Footer(props) {
           </List>
         </div>
         <div className={classes.right}>
-          &copy; {1900 + new Date().getYear()} , made with{" "}
+          &copy; {1900 + new Date().getYear()} , made by{" "}
           <Favorite className={classes.icon} /> by{" "}
           <a
-            href="https://www.creative-tim.com?ref=mkr-footer"
+            href="localhost:3000/creator"
             className={aClasses}
             target="_blank"
           >
-            Creative Tim
+            Salih Saygi
           </a>{" "}
           for a better web.
         </div>

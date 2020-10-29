@@ -1,24 +1,23 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Route } from "react-router-dom";
 import LandingPage from './compenents/LandingPage'
 import LoginPage from './compenents/Sign/LoginPage'
 // import Navbar from './compenents/common/Navbar'
 import RegisterPage from './compenents/Sign/RegisterPage'
+import Dashboard from './compenents/Dashboard'
 import useLocalStorage from './hooks/useLocalStorage';
 import MessagingPage from './compenents/Message/MessagingPage'
-import { ContactsProvider } from './contexts/ContactsProvider'
-import { ConversationsProvider } from './contexts/ConversationsProvider';
-import { SocketProvider } from './contexts/SocketProvider';
+import {ContactsProvider} from './contexts/ContactProvider'
+import {ConversationsProvider} from './contexts/ConversationProvider';
+import SocketIOProvider from './contexts/SocketIOProvider';
+
 
 function App() {
-
-  const [id, setId] = useLocalStorage('id')
-
   const MessagingDashboard = (
-    <SocketProvider id={id}>
+    <SocketProvider>
       <ContactsProvider>
-        <ConversationsProvider id={id}>
-          <MessagingPage id={id} />
+        <ConversationsProvider>
+          <MessagingPage/>
         </ConversationsProvider>
       </ContactsProvider>
     </SocketProvider>
@@ -34,13 +33,13 @@ function App() {
         { /*<Route path="/edit/:id" component={EditExercise} />
         <Route path="/create" component={CreateExercise} />
         <Route path="/users" component={CreateUser} />
-        <Route path="/reports" component={CreateUser} />
-        <Route path="/login" component={CreateUser} /> */ }
+        <Route path="/reports" component={CreateUser} /> */ }
+        <Route path="/dashboard" component={Dashboard} /> 
         <Route path="/message" component={MessagingDashboard} />
         <Route path="/register" component={RegisterPage} />
         <Route path="/login" component={LoginPage} />
         </div>
-    </Router>
+      </Router>
     </>
   );
 }

@@ -7,7 +7,8 @@ import TableRow from '@material-ui/core/TableRow'
 
 import { useTable, usePagination } from 'react-table'
 import styled from 'styled-components'
-import makeData from './makeData'
+
+//Axios User Data
 
 const Styles = styled.div`
   padding: 1rem;

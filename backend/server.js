@@ -13,8 +13,9 @@ const mongoose = require('mongoose')
 const database = require('./config/db')
 const MongoStore = require('connect-mongo')(session)
 const { connection } = require('./config/db')
+const socketioJwt = require('socketio-jwt')
 const app = express()
-const server = http.createServer(app)
+const server = http.createServer(app);
 //Server Config
 app.use(cors())
 app.use(express.json())
@@ -24,7 +25,7 @@ const sessionStore = new MongoStore({ mongooseConnection: connection, collection
 
 app.use(
     session({
-      secret: process.env.SECRET_SESSION,
+      secret: "nebakiyorsunlan",
       resave: false,
       saveUninitialized: true,
       store: sessionStore,
@@ -48,57 +49,43 @@ localPassport(
 
 //Routes
 
-const { ensureUser, ensureGuest } = require('./config/auth')
+const { ensureUser, ensureGuest, ensureAdmin } = require('./config/auth')
 
 const router = express.Router()
-const dashboardRouter = require('./routes/user.route')
-const googleAuthRouter = require('./routes/googleAuth.router')
+const adminDashboardRouter = require('./routes/admin/userAdmin.route')
+const googleAuthRouter = require('./routes/admin/googleAuth.router')
+const userMethods = require('./controllers/user.controller')
 
 app.use('/', ensureGuest, router)
-app.use('/dashboard', ensureUser, dashboardRouter)
+app.use('/admin-dashboard', ensureAdmin, adminDashboardRouter)
 app.use('/auth', googleAuthRouter)
 
-app.post('/login',
-  passport.authenticate(['local', 'passport-google-oauth']),
-     function(req, res) {
-       // If this function gets called, authentication was successful.
-       // `req.user` contains the authenticated user.
-       res.redirect('/users/' + req.user.username)
+app.post('/login', 
+    ensureGuest, 
+    passport.authenticate(['local', 'passport-google-oauth']),
+        function(req, res) {
+        // If this function gets called, authentication was successful.
+        // `req.user` contains the authenticated user.
+        res.redirect('/dashboard/')
 })
+
+router.post('/register', userMethods.createUser)
 
 //Location Middleware
 const location = require('./chatUtils/location')
 app.use(location)
 
 //SocketIO
-io.use((socket, next) => {
-    if(isValid(socket.request)) {
-        next()
-    } else {
-        next(new Error('invalid'))
-    }
+io.sockets
+    .on('connection', socketioJwt.authorize ({
+        secret: 'your secret or public key',
+        timeout: 5000
+    }))
+    .on('authenticated', (socket) => {
+        require('./config/socketio')(socket)
+        return io
 })
 
-const adminNameS = io.of('/admin')
-
-adminNameS.use(async (socket, next) => {
-    const user = await fetchUser(socket.handshake.query)
-    if(user.isAdmin) {
-        socket.user = user
-        next()
-    } else {
-        next(new Error('Not Admin'))
-    }
-})
-
-const customNameS = io.of(/[^A-Za-z0-9]+/g)
-
-io.on('connection', socket => {
-    const customNameS = socket.nsp
-    require('./socketio')(socket)
-
-    return io
-})
 
 app.use(passport.initialize())
 app.use(passport.session())

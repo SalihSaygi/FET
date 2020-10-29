@@ -130,9 +130,9 @@ exports.updateUser = (req, res) => {
         .catch((err) => {
             return res.status(200).json(
                 { message: err + "\n| Found it but couldn't retrieve the user with id: " + req.params.userId + " |" }
-            )
-        })
-}
+            );
+        });
+};
 
 function genPassword(password) {
     var salt = crypto.randomBytes(32).toString('hex');

@@ -1,5 +1,5 @@
 import React from 'react'
-import { useConversations } from './contexts/ConversationsProvider'
+import { useConversations } from '../../contexts/ConversationProvider'
 import { ListGroup } from 'react-bootstrap'
 
 export default function Conversations() {

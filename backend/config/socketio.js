@@ -11,7 +11,23 @@ const {
     getUserRooms
 } = require('./chatUtils/users')
 
-module.exports = function(socket) {
+//Namespaces
+
+const adminNamespace = io.of('/admin')
+const userNamespace = io.of('/user')
+const developerNamespace = io.of('/developer')
+const animalControlNamespace = io.of('/animalControl')
+const dbModerator = io.of('/dbModerator')
+
+exports.user = (socket) => {
+    //Authorization
+    io.use((socket, next) => {
+        if(isValid(socket.request)) {
+            next()
+        } else {
+            next(new Error('invalid'))
+        }
+    })
 
     socket.on('joinRoom', ({ username, room }) => {
         const user = userJoin(socket.id, username, room)
@@ -42,5 +58,18 @@ module.exports = function(socket) {
             socket.to(room).broadcast.emit('user-disconnected', rooms[room].users[socket.id])
             delete rooms[room].users[socket.id]
         })
+    })
+}
+
+exports.admin = (socket) => {
+    //Authorization + admin auth
+    adminNamespace.use(async (socket, next) => {
+        const user = await fetchUser(socket.handshake.query)
+        if(user.isAdmin) {
+            socket.user = user
+            next()
+        } else {
+            next(new Error('Not Admin'))
+        }
     })
 }

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { props, useState } from 'react';
 import PropTypes from 'prop-types';
 import AppBar from '@material-ui/core/AppBar';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -17,9 +17,9 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 
-import Conversations from './Conversations'
-import Contacts from './Contacts'
-import AccountSetting from './AccountAccountEdit/'
+import Conversations from './Conversation'
+import Contacts from './Contact'
+import AccountSetting from '../Account/AccountEdit'
 
 const CONVERSATIONS_KEY = 'conversations'
 const CONTACTS_KEY = 'contacts'

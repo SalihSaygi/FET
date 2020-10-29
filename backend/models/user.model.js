@@ -75,6 +75,7 @@ const UserSchema = mongoose.Schema({
         data: Buffer,
         contentType: String
     },
+    friends: [String],
     details: 
         {
         age: {

@@ -17,7 +17,7 @@ module.exports = {
         if(req.body.role == 'admin') {
             return next()
         } else {
-            res.redirect('/dashboard');
+            res.redirect('/admin-dashboard');
         }
     }
 }

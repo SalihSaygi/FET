@@ -1,5 +1,6 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState, useEffect,  } from 'react'
 import useLocalStorage from '../hooks/useLocalStorage';
+import { useSocket } from './SocketIOProvider';
 
 const ContactsContext = React.createContext()
 
@@ -9,6 +10,8 @@ export function useContacts() {
 
 export function ContactsProvider({ children }) {
   const [contacts, setContacts] = useLocalStorage('contacts', [])
+  const [selectedContactsIndex, setSelectedContactsIndex] = useState()
+  const socket = useSocket()
 
   function createContact(id, name) {
     setContacts(prevContacts => {
@@ -21,4 +24,15 @@ export function ContactsProvider({ children }) {
       {children}
     </ContactsContext.Provider>
   )
+}
+
+function arrayEquality(a, b) {
+  if (a.length !== b.length) return false
+
+  a.sort()
+  b.sort()
+
+  return a.every((element, index) => {
+    return element === b[index]
+  })
 }

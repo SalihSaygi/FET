@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect, useCallback } from 'react'
 import useLocalStorage from '../hooks/useLocalStorage';
-import { useContacts } from './ContactsProvider';
-import { useSocket } from './SocketProvider';
+import { useContacts } from './ContactProvider';
+import { useSocket } from './SocketIOProvider';
 
 const ConversationsContext = React.createContext()
 
