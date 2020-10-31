@@ -19,7 +19,7 @@ const GoogleUserSchema = mongoose.Schema({
   createdAt: {
     type: Date,
     default: Date.now,
-  },
+  }
 })
 
 module.exports = googleUser = mongoose.model('googleUser', GoogleUserSchema)

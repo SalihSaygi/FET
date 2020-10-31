@@ -9,18 +9,17 @@ import useLocalStorage from './hooks/useLocalStorage';
 import MessagingPage from './compenents/Message/MessagingPage'
 import {ContactsProvider} from './contexts/ContactProvider'
 import {ConversationsProvider} from './contexts/ConversationProvider';
-import SocketIOProvider from './contexts/SocketIOProvider';
-
+import {SocketIOProvider} from './contexts/SocketIOProvider';
 
 function App() {
   const MessagingDashboard = (
-    <SocketProvider>
+    <SocketIOProvider>
       <ContactsProvider>
         <ConversationsProvider>
           <MessagingPage/>
         </ConversationsProvider>
       </ContactsProvider>
-    </SocketProvider>
+    </SocketIOProvider>
   )
 
   return (
@@ -35,7 +34,15 @@ function App() {
         <Route path="/users" component={CreateUser} />
         <Route path="/reports" component={CreateUser} /> */ }
         <Route path="/dashboard" component={Dashboard} /> 
-        <Route path="/message" component={MessagingDashboard} />
+        <Route path="/message">
+          <SocketIOProvider>
+            <ContactsProvider>
+              <ConversationsProvider>
+                <MessagingPage/>
+              </ConversationsProvider>
+            </ContactsProvider>
+          </SocketIOProvider>
+        </Route>
         <Route path="/register" component={RegisterPage} />
         <Route path="/login" component={LoginPage} />
         </div>

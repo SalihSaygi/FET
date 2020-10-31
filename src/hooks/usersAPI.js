@@ -2,13 +2,16 @@ export default {
     getUsers : ()=>{
         return fetch('/users')
                 .then(res => res.json())
-                .then(data => user);
+
+    },
+    findOneUser : (_id)=>{
+        return fetch(`/users/${_id}`)
+                    .then(res => res.json())
     },
     deleteUser : (_id)=>{
         return fetch(`/users/${_id}`,
                     {method : 'delete'})
                     .then(res => res.json())
-                    .then(data => user);
     },
     updateUser : (user)=>{
         return fetch(`/users/${user._id}`,
@@ -17,7 +20,6 @@ export default {
                      headers : {
                          "Content-Type" : "application/json"
                      }}).then(res => res.json())
-                        .then(data => user);
     },
     createUser : (user)=>{
         return fetch(`/users/create`,
@@ -26,6 +28,5 @@ export default {
             headers : {
                 "Content-Type" : "application/json"
             }}).then(res => res.json())
-                .then(data => user);
     }
 }

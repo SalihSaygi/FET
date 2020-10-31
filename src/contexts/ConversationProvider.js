@@ -9,11 +9,14 @@ export function useConversations() {
   return useContext(ConversationsContext)
 }
 
-export function ConversationsProvider({ id, children }) {
+export function ConversationsProvider({ children }) {
+  const { socketItem, idItem } = useSocket()
+  const [socket, setSocket] = socketItem;
+  const [id, setId] = idItem;
+
   const [conversations, setConversations] = useLocalStorage('conversations', [])
   const [selectedConversationIndex, setSelectedConversationIndex] = useState(0)
   const { contacts } = useContacts()
-  const socket = useSocket()
 
   function createConversation(recipients) {
     setConversations(prevConversations => {

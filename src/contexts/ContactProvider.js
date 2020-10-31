@@ -9,9 +9,11 @@ export function useContacts() {
 }
 
 export function ContactsProvider({ children }) {
+  const { socketItem, idItem } = useSocket()
+  const [socket, setSocket] = socketItem;
+  const [id, setId] = idItem;
   const [contacts, setContacts] = useLocalStorage('contacts', [])
   const [selectedContactsIndex, setSelectedContactsIndex] = useState()
-  const socket = useSocket()
 
   function createContact(id, name) {
     setContacts(prevContacts => {

@@ -29,7 +29,7 @@ const ReportSchema = mongoose.Schema({
         data: Buffer,
         contentType: String
     },
-    interest: [{
+    forWho: [{
         type: mongoose.Schema.ObjectId, ref: 'User'
     }],
     comments: [{
@@ -37,7 +37,7 @@ const ReportSchema = mongoose.Schema({
         created: { type: Date, default: Date.now },
         postedBy: { type: mongoose.Schema.ObjectId, ref: 'User'}
     }],
-    reportedBy:  {type: mongoose.Schema.Types.ObjectId, ref: 'User'}
+    reportedBy: {type: mongoose.Schema.Types.ObjectId, ref: 'User' || type: mongoose.Schema.Types.ObjectId, ref: 'googleUser'}
 }, {
     timestamps: true,
 })

@@ -1,40 +1,27 @@
 import React, { useState, useCallback} from 'react'
-import { Form, InputGroup, Button, Modal } from 'react-bootstrap'
+import  from '@material-ui/core/'
 import { useContacts } from '../../contexts/ContactProvider'
 
 export default function OpenContact(props) {
-    const [requestMessage, setRequestMessage] = useState('')
     const setRef = useCallback(node => {
         if(node) {
             node.scrollIntoView({ smooth: true })
         }
     }, [] )
-    const {sendFriendRequest, selectedContacts } = useContacts()
-
-    function handleSubmit(e) {
-        e.preventDefault()
-
-        e.target.reset()
-
-        sendFriendRequest(
-            selectedContacts.map(contact => contact.id),
-            requestMessage
-        )
-        setRequestMessage('')
-    }
+    const {selectedContacts, setSelectedContacts } = useContacts()
 
     const [modalShow, setModalShow] = useState(false);
     
+    const photoUrl = values.user._id
+              ? `/api/users/photo/${values.user._id}?${new Date().getTime()}`
+              : '/api/users/defaultphoto'
+
     return (
         <>
-          <Button variant="primary" onClick={() => setModalShow(true)}>
-                Launch vertically centered modal
-            </Button>
-
-            <ContactPopUp
-                show={modalShow}
-                onHide={() => setModalShow(false)}
-            />
+            <Navbar/>
+            <div className="profileInfo">
+                <img src="img_avatar.png" alt="Profile Picture">
+            <div/>
         </>
     )
 }

@@ -75,26 +75,29 @@ const UserSchema = mongoose.Schema({
         data: Buffer,
         contentType: String
     },
-    friends: [String],
-    details: 
-        {
+    details: {
+
         age: {
             type: Number,
-            trim: true
+            trim: true,
+            required: false
         },
         pronons: {
             type: String,
-            enum: ['he/him', 'she/her', 'others']
+            enum: ['he/him', 'she/her', 'others'],
+            required: false
         },
         nationality: {
             type: String,
-            trim: true
+            trim: true,
+            required: false
         }
+    }
 },
     reports: [{type: mongoose.Schema.Types.ObjectId, ref: 'Report'}]
 }, {
     timestamps: true,
-})
+}, opts)
 
 UserSchema.virtual('fullName').
   get(function() { return `${this.firstName} ${this.lastName}`; }).
@@ -122,4 +125,7 @@ UserSchema.methods.comparePassword = function comparePassword(candidatePassword,
     });
 };
 
-module.export = User = mongoose.model('User', UserSchema)
+const User = mongoose.model('User', UserSchema)
+
+doc.toJSON().domain
+JSON.stringify(doc)
