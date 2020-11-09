@@ -5,12 +5,12 @@ import { makeStyles } from "@material-ui/core/styles";
 // @material-ui/icons
 
 // core ..
-import GridContainer from "../common/GridContainer";
-import GridItem from "../common/GridItem.js";
-import CustomInput from "../common/CustomInput.js";
-import Button from "../common/Button.js";
+import GridContainer from "../../common/GridContainer";
+import GridItem from "../../common/GridItem.js";
+import CustomInput from "../../common/CustomInput.js";
+import Button from "../../common/Button.js";
 
-import styles from "../../sources/jss/workStyle";
+import styles from "../../../sources/jss/workStyle";
 
 const useStyles = makeStyles(styles);
 

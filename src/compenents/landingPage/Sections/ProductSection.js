@@ -7,11 +7,11 @@ import Chat from "@material-ui/icons/Chat";
 import VerifiedUser from "@material-ui/icons/VerifiedUser";
 import Fingerprint from "@material-ui/icons/Fingerprint";
 // core ..
-import GridContainer from "../common/GridContainer.js";
-import GridItem from "../common/GridItem.js";
-import InfoArea from "../common/InfoArea.js";
+import GridContainer from "../../common/GridContainer.js";
+import GridItem from "../../common/GridItem.js";
+import InfoArea from "../../common/InfoArea.js";
 
-import styles from "../../sources/jss/productStyle";
+import styles from "../../../sources/jss/productStyle";
 
 const useStyles = makeStyles(styles);
 

@@ -1,10 +1,10 @@
 const express = require('express')
 const userRoute = express.Router()
 const userMethods = require('../../controllers/user.controller')
-const { ensureAdmin } = require('../../config/auth')
+const { ensureUser } = require('../../config/auth')
 
-userRoute.get('/:userId', userMethods.findOneUser)
-userRoute.put('/:userId/edit', userMethods.updateUser)
-userRoute.delete('/:userId', userMethods.deleteUser)
+userRoute.get('/:userId', ensureUser, userMethods.findOneUser)
+userRoute.put('/:userId/edit', ensureUser, userMethods.updateUser)
+userRoute.delete('/:userId', ensureUser, userMethods.deleteUser)
 
 module.exports = userRoute

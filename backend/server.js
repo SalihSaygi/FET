@@ -37,9 +37,15 @@ app.use(
 
 const port = process.env.PORT || 3000
 
-//Auth Imports
+const Pusher = require("pusher");
 
-
+const pusher = new Pusher({
+  appId: "1100018",
+  key: "f4284b71efae2bd5907f",
+  secret: "1fc28addaeb881ff768a",
+  cluster: "us3",
+  useTLS: true
+});
 
 localPassport(
     passport,

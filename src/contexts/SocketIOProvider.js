@@ -8,7 +8,7 @@ export function useSocket() {
     return useContext(SocketIOContext)
 }
 
-export function SocketIOProvider({children}) {
+export function SocketIOProvider({name, children}) {
     const [socket, setSocket] = useState()
     const [id, setId] = useState()
 
@@ -18,7 +18,6 @@ export function SocketIOProvider({children}) {
             const req = await axios.get('/users/:id')
             id = req.user._id
             setId(id)
-            return id
         }
 
         

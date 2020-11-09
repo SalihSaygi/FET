@@ -9,14 +9,14 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 // @material-ui/icons
 
 // core ..
-import GridContainer from "../common/GridContainer.js";
-import GridItem from "../common/GridItem.js";
-import Button from "../common/Button.js";
-import Card from "../common/Card.js";
-import CardBody from "../common/CardBody.js";
-import CardFooter from "../common/CardFooter.js";
+import GridContainer from "../../common/GridContainer.js";
+import GridItem from "../../common/GridItem.js";
+import Button from "../../common/Button.js";
+import Card from "../../common/Card.js";
+import CardBody from "../../common/CardBody.js";
+import CardFooter from "../../common/CardFooter.js";
 
-import styles from "../../sources/jss/teamStyle";
+import styles from "../../../sources/jss/teamStyle";
 
 const useStyles = makeStyles(styles);
 

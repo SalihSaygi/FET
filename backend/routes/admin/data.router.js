@@ -1,10 +1,14 @@
 const express = require('express')
 const dataRouter = express.Router()
 
-const userRouter = require('./userAdmin.route')
-const reportRouter = require('./report.route')
+const userAdminRouter = require('./userAdmin.route')
+const reportAdminRouter = require('./report.route')
+const { ensureAdmin } = require('../../config/auth')
 
-dataRouter.use('/users', userRouter)
-dataRouter.use('/reports', reportRouter)
+dataRouter.use('/', ensureAdmin, (req, res) => {
+     res.redirect('/users');
+})
+dataRouter.use('/users', ensureAdmin, userAdminRouter)
+dataRouter.use('/reports', ensureAdmin, reportAdminRouter)
 
 module.exports = dataRouter

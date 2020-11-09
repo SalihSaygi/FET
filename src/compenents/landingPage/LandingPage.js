@@ -8,15 +8,15 @@ import { Link } from "react-router-dom"
 // @material-ui/icons
 
 // core .
-import Header from "./common/Header";
-import Footer from "./common/Footer.js";
-import GridContainer from "./common/GridContainer.js";
-import GridItem from "./common/GridItem.js";
-import Button from "./common/Button.js";
-import HeaderLinks from "./common/HeaderLinks.js";
-import Parallax from "./common/Parallax.js";
+import Header from "./../common/Header";
+import Footer from "./../common/Footer.js";
+import GridContainer from "./../common/GridContainer.js";
+import GridItem from "./../common/GridItem.js";
+import Button from "./../common/Button.js";
+import HeaderLinks from "./../common/HeaderLinks.js";
+import Parallax from "./../common/Parallax.js";
 
-import styles from "../sources/jss/landingPage.js"
+import styles from "../.././sources/jss/landingPage.js"
 
 // Sections for this page
 import ProductSection from "./Sections/ProductSection.js";
@@ -43,7 +43,7 @@ export default function LandingPage(props) {
                     backgroundColor: 'rgb(68, 88, 119)',
                     textColor: '#A7DBAE',
                     text: 'Revort',
-                    image: require('../sources/images/logo.png')
+                    image: require('../../sources/images/logo.png')
                 }
                 ]
             }
@@ -63,7 +63,7 @@ export default function LandingPage(props) {
         }}
         {...rest}
       />
-      <Parallax filter image={require("../sources/images/backgroundImage.jpg")}>
+      <Parallax filter image={require("../../sources/images/backgroundImage.jpg")}>
         <div className={classes.container}>
           <GridContainer>
             <GridItem xs={12} sm={12} md={6}>

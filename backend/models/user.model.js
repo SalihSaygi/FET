@@ -92,9 +92,8 @@ const UserSchema = mongoose.Schema({
             trim: true,
             required: false
         }
-    }
-},
-    reports: [{type: mongoose.Schema.Types.ObjectId, ref: 'Report'}]
+    },
+    reports: [{type: mongoose.Schema.Types.ObjectId, ref: 'Report'}] 
 }, {
     timestamps: true,
 }, opts)
@@ -104,6 +103,8 @@ UserSchema.virtual('fullName').
   set(function(v) {
     const firstName = v.substring(0, v.indexOf(' '));
     const lastName = v.substring(v.indexOf(' ') + 1);
+    opts.toJSON().fullname
+    JSON.stringify(opts)
     this.set({ firstName, lastName });
   })
 
@@ -126,6 +127,3 @@ UserSchema.methods.comparePassword = function comparePassword(candidatePassword,
 };
 
 const User = mongoose.model('User', UserSchema)
-
-doc.toJSON().domain
-JSON.stringify(doc)

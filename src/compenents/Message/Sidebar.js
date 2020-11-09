@@ -19,7 +19,6 @@ import { makeStyles, useTheme } from '@material-ui/core/styles';
 
 import Conversations from './Conversation'
 import Contacts from './Contact'
-import AccountSetting from '../Account/AccountEdit'
 
 const CONVERSATIONS_KEY = 'conversations'
 const CONTACTS_KEY = 'contacts'

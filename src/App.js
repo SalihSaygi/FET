@@ -1,10 +1,10 @@
 import React from 'react';
 import { BrowserRouter as Router, Route } from "react-router-dom";
-import LandingPage from './compenents/LandingPage'
+import LandingPage from './compenents/landingPage/LandingPage'
 import LoginPage from './compenents/Sign/LoginPage'
 // import Navbar from './compenents/common/Navbar'
 import RegisterPage from './compenents/Sign/RegisterPage'
-import Dashboard from './compenents/Dashboard'
+import AdminDashboard from './compenents/AdminDashboard'
 import useLocalStorage from './hooks/useLocalStorage';
 import MessagingPage from './compenents/Message/MessagingPage'
 import {ContactsProvider} from './contexts/ContactProvider'
@@ -12,15 +12,6 @@ import {ConversationsProvider} from './contexts/ConversationProvider';
 import {SocketIOProvider} from './contexts/SocketIOProvider';
 
 function App() {
-  const MessagingDashboard = (
-    <SocketIOProvider>
-      <ContactsProvider>
-        <ConversationsProvider>
-          <MessagingPage/>
-        </ConversationsProvider>
-      </ContactsProvider>
-    </SocketIOProvider>
-  )
 
   return (
     <>
@@ -33,7 +24,7 @@ function App() {
         <Route path="/create" component={CreateExercise} />
         <Route path="/users" component={CreateUser} />
         <Route path="/reports" component={CreateUser} /> */ }
-        <Route path="/dashboard" component={Dashboard} /> 
+        <Route path="/admin-dashboard" component={AdminDashboard} /> 
         <Route path="/message">
           <SocketIOProvider>
             <ContactsProvider>
