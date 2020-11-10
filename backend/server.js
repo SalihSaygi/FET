@@ -14,12 +14,17 @@ const database = require('./config/db')
 const MongoStore = require('connect-mongo')(session)
 const { connection } = require('./config/db')
 const socketioJwt = require('socketio-jwt')
+const multer = require('multer')
+const gridFsStorage = require('multer-gridfs-storage')
+const grid = require('gridfs-stream')
+const pusher = require('pusher')
+grid.mongo = mongoose.mongo
 const app = express()
 const server = http.createServer(app);
 //Server Config
-app.use(cors())
 app.use(express.json())
-app.use(express.urlencoded({ extended: true }))
+app.use(express.urlencoded({ extended: false }))
+app.use(cors())
 
 const sessionStore = new MongoStore({ mongooseConnection: connection, collection: 'sessions' })
 
@@ -55,14 +60,16 @@ localPassport(
 
 //Routes
 
-const { ensureUser, ensureGuest, ensureAdmin } = require('./config/auth')
+const { ensureUser, ensureGuest, ensureAdmin } = require('./config/ensureRoles')
 
 const router = express.Router()
 const adminDashboardRouter = require('./routes/admin/userAdmin.route')
 const googleAuthRouter = require('./routes/admin/googleAuth.router')
 const userMethods = require('./controllers/user.controller')
 
-app.use('/', ensureGuest, router)
+app.use('/', ensureGuest, (req, res) => {
+    res.send("IT WORKS");
+})
 app.use('/admin-dashboard', ensureAdmin, adminDashboardRouter)
 app.use('/auth', googleAuthRouter)
 
@@ -72,10 +79,15 @@ app.post('/login',
         function(req, res) {
         // If this function gets called, authentication was successful.
         // `req.user` contains the authenticated user.
-        res.redirect('/dashboard/')
+        res.redirect('/dashboard')
 })
 
-router.post('/register', userMethods.createUser)
+app.get('/logout', ensureUser, function(req, res){
+    req.logout()
+    res.redirect('/')
+})
+
+app.post('/register', ensureGuest, userMethods.createUser)
 
 //Location Middleware
 const location = require('./chatUtils/location')

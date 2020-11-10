@@ -106,7 +106,7 @@ UserSchema.virtual('fullName').
     opts.toJSON().fullname
     JSON.stringify(opts)
     this.set({ firstName, lastName });
-  })
+})
 
 UserSchema.pre('save', function(next){
     if(!this.isModified('password')) return next()

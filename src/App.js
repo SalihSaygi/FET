@@ -3,13 +3,15 @@ import { BrowserRouter as Router, Route } from "react-router-dom";
 import LandingPage from './compenents/landingPage/LandingPage'
 import LoginPage from './compenents/Sign/LoginPage'
 // import Navbar from './compenents/common/Navbar'
-import RegisterPage from './compenents/Sign/RegisterPage'
+// import RegisterPage from './compenents/Sign/RegisterPage'
+import { Register } from './compenents/Sign/Multi-Step-Registration/UserForm'
 import AdminDashboard from './compenents/AdminDashboard'
 import useLocalStorage from './hooks/useLocalStorage';
 import MessagingPage from './compenents/Message/MessagingPage'
 import {ContactsProvider} from './contexts/ContactProvider'
 import {ConversationsProvider} from './contexts/ConversationProvider';
 import {SocketIOProvider} from './contexts/SocketIOProvider';
+import ErrorPage from './compenents/ErrorPage.js'
 
 function App() {
 
@@ -34,8 +36,9 @@ function App() {
             </ContactsProvider>
           </SocketIOProvider>
         </Route>
-        <Route path="/register" component={RegisterPage} />
+        <Route path="/register" component={Register} />
         <Route path="/login" component={LoginPage} />
+        <Route path="*" component={ErrorPage} />
         </div>
       </Router>
     </>

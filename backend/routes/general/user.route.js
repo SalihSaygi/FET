@@ -1,7 +1,7 @@
 const express = require('express')
 const userRoute = express.Router()
 const userMethods = require('../../controllers/user.controller')
-const { ensureUser } = require('../../config/auth')
+const { ensureUser } = require('../../config/ensureRoles')
 
 userRoute.get('/:userId', ensureUser, userMethods.findOneUser)
 userRoute.put('/:userId/edit', ensureUser, userMethods.updateUser)

@@ -25,7 +25,7 @@ exports.createUser = (req, res) => {
         phoneNumber: req.body.phoneNumber,
         currentRank: req.body.currentRank,
         role: req.body.role,
-        adress: req.body.adress,
+        address: req.body.adress,
         numberOfFindings: req.body.numberOfFindings,
         profilePhoto: req.body.profilePhoto,
         age: req.body.details.age,
