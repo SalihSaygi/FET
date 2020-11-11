@@ -7,7 +7,7 @@ const location = (req, res, next) => {
             console.log(cityName)
             const stateName = result.get('region')
             const zipCode = result.get('\n postalCode')
-            const adress = cityName + stateName + zipCode
+            const adress = `${cityName}, ${stateName}, ${zipCode}`
             req.geoip = adress
         }
         if (err) {

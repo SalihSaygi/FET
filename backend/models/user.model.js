@@ -1,4 +1,4 @@
-const mongoose = require('../config/db')
+const mongoose = require('mongoose')
 const bcrypt = require('bcrypt')
 
 const opts = { toJSON: { virtuals: true } }
@@ -34,7 +34,6 @@ const UserSchema = mongoose.Schema({
         type: String,
         required: true,
         minlength: 7,
-        match: [/.+\@.+\..+/, 'Please fill a valid email address'],
         unique: true
     },
     phoneNumber: {
@@ -75,6 +74,10 @@ const UserSchema = mongoose.Schema({
         data: Buffer,
         contentType: String
     },
+    reports: [{
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'Report'
+    }],
     details: {
 
         age: {
@@ -82,7 +85,7 @@ const UserSchema = mongoose.Schema({
             trim: true,
             required: false
         },
-        pronons: {
+        pronouns: {
             type: String,
             enum: ['he/him', 'she/her', 'others'],
             required: false
@@ -92,8 +95,7 @@ const UserSchema = mongoose.Schema({
             trim: true,
             required: false
         }
-    },
-    reports: [{type: mongoose.Schema.Types.ObjectId, ref: 'Report'}] 
+    }, 
 }, {
     timestamps: true,
 }, opts)
