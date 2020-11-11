@@ -4,21 +4,20 @@ const path = require('path')
 const http = require('http')
 const cors = require('cors')
 const io = require('socket.io')(5000)
-require('dotenv').config({ path: '.env' })
+require('dotenv').config({ path: '../.env' })
+const URI = process.env.URI
 const passport = require('passport')
+const multer = require('multer')
+const gridFsStorage = require('multer-gridfs-storage')
+const pusher = require('pusher')
 const session = require('express-session')
 const localPassport = require('./config/passport-local')
 const googlePassport = require('./config/passport-google')
 const mongoose = require('mongoose')
-const database = require('./config/db')
 const MongoStore = require('connect-mongo')(session)
-const { connection } = require('./config/db')
+const connectMongoDB = require('./config/db')
+connectMongoDB()
 const socketioJwt = require('socketio-jwt')
-const multer = require('multer')
-const gridFsStorage = require('multer-gridfs-storage')
-const grid = require('gridfs-stream')
-const pusher = require('pusher')
-grid.mongo = mongoose.mongo
 const app = express()
 const server = http.createServer(app);
 //Server Config
@@ -26,7 +25,7 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 app.use(cors())
 
-const sessionStore = new MongoStore({ mongooseConnection: connection, collection: 'sessions' })
+const sessionStore = new MongoStore({ mongooseConnection: mongoose.connection, collection: 'sessions' })
 
 app.use(
     session({
@@ -35,6 +34,7 @@ app.use(
       saveUninitialized: true,
       store: sessionStore,
       cookie: {
+          //lasts 1 day
         maxAge: 24*60*60*1000
     }
     })
@@ -42,9 +42,7 @@ app.use(
 
 const port = process.env.PORT || 3000
 
-const Pusher = require("pusher");
-
-const pusher = new Pusher({
+const newPusher = new pusher({
   appId: "1100018",
   key: "f4284b71efae2bd5907f",
   secret: "1fc28addaeb881ff768a",
@@ -104,6 +102,35 @@ io.sockets
         return io
 })
 
+const storage = new gridFsStorage({
+    url: URI,
+    file: (req, file) => {
+        return new Promise((resolve, reject) => {{
+            const fileType = file.type
+            const filename = `${fileType}-${Data.now()}${path.extname(file.originalName)}`
+            
+            const fileInfo={
+                filename: filename,
+                bucketName: 'images'
+            }
+
+            resolve(fileInfo)
+        }
+    })
+    }
+})
+
+const upload = multer(
+    { 
+        storage,
+        fileFilter: (req, file, cb) => {
+            if(file)
+        } 
+    })
+
+app.post('/upload/image', upload.single('file'), (req, res) => {
+    res.status(201).send(req.file)
+})
 
 app.use(passport.initialize())
 app.use(passport.session())
