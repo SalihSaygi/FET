@@ -120,7 +120,7 @@ const storage = new gridFsStorage({
     }
 })
 
-const upload = multer(
+const uploadVideo = multer(
     { 
         storage,
         fileFilter: (req, file, cb) => {
@@ -128,7 +128,7 @@ const upload = multer(
         } 
     })
 
-app.post('/upload/image', upload.single('file'), (req, res) => {
+app.post('/', upload.single('file'), (req, res) => {
     res.status(201).send(req.file)
 })
 
