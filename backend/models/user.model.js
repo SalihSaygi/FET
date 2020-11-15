@@ -30,6 +30,7 @@ const UserSchema = mongoose.Schema({
     },
     hash: String,
     salt: String,
+    googleId: String,
     email: {
         type: String,
         required: true,
@@ -78,25 +79,30 @@ const UserSchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'Report'
     }],
-    details: {
-
-        age: {
-            type: Number,
-            trim: true,
-            required: false
-        },
-        pronouns: {
-            type: String,
-            enum: ['he/him', 'she/her', 'others'],
-            required: false
-        },
-        nationality: {
-            type: String,
-            trim: true,
-            required: false
-        }
-    }, 
-}, {
+    age: {
+        type: Number,
+        trim: true,
+        required: false
+    },
+    pronouns: {
+        type: String,
+        enum: ['he/him', 'she/her', 'others'],
+        required: false
+    },
+    nationality: {
+        type: String,
+        trim: true,
+        required: false
+    },
+    bio: {
+        type: String,
+        required: false
+    },
+    resetPasswordLink: {
+        data: String,
+        default: ''
+    },
+    }, {
     timestamps: true,
 }, opts)
 

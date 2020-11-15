@@ -1,10 +1,7 @@
 const mongoose = require('mongoose');
-const grid = require('gridfs-stream')
-grid.mongo = mongoose.mongo
 
 require('dotenv').config({ path: '../../.env' })
 const URI = process.env.URI || "mongodb://localhost/mern-stack"
-let gfs
 
 const connectMongoDB = async () => {
     try {
@@ -16,11 +13,6 @@ const connectMongoDB = async () => {
         })
 
         console.log(`MongoDB Connected: ${connection.connection.host}`)
-            
-        gfs = grid(connection.db, mongoose.mongo)
-        gfs.collection('images')
-        gfs.collection('videos')
-
     } catch (err) {
         
         console.error(err)

@@ -14,9 +14,12 @@ const session = require('express-session')
 const localPassport = require('./config/passport-local')
 const googlePassport = require('./config/passport-google')
 const mongoose = require('mongoose')
-const MongoStore = require('connect-mongo')(session)
+const Redis = requrie('ioredis')
+const connectToRedis = require('connect-redis')(session)
+const RedisStore = connectToRedis(session)
 const connectMongoDB = require('./config/db')
 connectMongoDB()
+const grid = require('gridfs-stream')
 const socketioJwt = require('socketio-jwt')
 const app = express()
 const server = http.createServer(app);
@@ -25,7 +28,12 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 app.use(cors())
 
-const sessionStore = new MongoStore({ mongooseConnection: mongoose.connection, collection: 'sessions' })
+const client = newRedis({
+    port
+    host
+})
+
+const sessionStore = new RedisStore({ client })
 
 app.use(
     session({
@@ -60,10 +68,12 @@ localPassport(
 
 const { ensureUser, ensureGuest, ensureAdmin } = require('./config/ensureRoles')
 
-const router = express.Router()
 const adminDashboardRouter = require('./routes/admin/userAdmin.route')
-const googleAuthRouter = require('./routes/admin/googleAuth.router')
+const googleAuthRouter = require('./routes/general/googleAuth.router')
 const userMethods = require('./controllers/user.controller')
+const reportRoute = require('./routes/general/report.route')
+
+app.use('/report', ensureUser, reportRoute)
 
 app.use('/', ensureGuest, (req, res) => {
     res.send("IT WORKS");
@@ -71,7 +81,7 @@ app.use('/', ensureGuest, (req, res) => {
 app.use('/admin-dashboard', ensureAdmin, adminDashboardRouter)
 app.use('/auth', googleAuthRouter)
 
-app.post('/login', 
+app.post('/login/', 
     ensureGuest, 
     passport.authenticate(['local', 'passport-google-oauth']),
         function(req, res) {
@@ -102,6 +112,28 @@ io.sockets
         return io
 })
 
+//ImageOrVideoStorage
+
+grid.mongo = mongoose.mongo
+
+const storageCon = mongoose.createConnection(URI, {
+    useCreateIndex: true,
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+})
+
+storageCon.once('open', () => {
+    console.log('Storage Database connection has been established succesfully')
+
+    gfs = grid(storageCon.db, mongoose.mongo)
+    gfs.collection('images')
+    gfs.collection('videos')
+})
+
+const maxSize = 5 * 1000 * 1000;
+
+const upload = multer({ storage })
+
 const storage = new gridFsStorage({
     url: URI,
     file: (req, file) => {
@@ -111,7 +143,7 @@ const storage = new gridFsStorage({
             
             const fileInfo={
                 filename: filename,
-                bucketName: 'images'
+                bucketName: 'sources'
             }
 
             resolve(fileInfo)
@@ -120,15 +152,7 @@ const storage = new gridFsStorage({
     }
 })
 
-const uploadVideo = multer(
-    { 
-        storage,
-        fileFilter: (req, file, cb) => {
-            if(file)
-        } 
-    })
-
-app.post('/', upload.single('file'), (req, res) => {
+app.post('/upload/file', upload.single('file'), (req, res) => {
     res.status(201).send(req.file)
 })
 

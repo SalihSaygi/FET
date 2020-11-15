@@ -1,4 +1,4 @@
-const mongoose = require('../config/db')
+const mongoose = require('mongoose')
 
 const ReportSchema = mongoose.Schema({
     animalType: {
@@ -29,9 +29,9 @@ const ReportSchema = mongoose.Schema({
         data: Buffer,
         contentType: String
     },
-    forWho: [{
+    forWho: {
         type: mongoose.Schema.ObjectId, ref: 'User'
-    }],
+    },
     comments: [{
         text: String,
         created: { type: Date, default: Date.now },

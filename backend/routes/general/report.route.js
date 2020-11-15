@@ -1,10 +1,7 @@
 const express = require('express')
 const reportRouter = express.Router()
-const reportMethods = require('../controllers/report.controller')
-const userAdminRouter = require('./userAdmin.route')
-const { ensureUser } = require('../../config/auth')
-
-reportRouter.use('/users', userAdminRouter)
+const reportMethods = require('../../controllers/report.controller')
+const { ensureUser } = require('../../config/ensureRoles')
 
 reportRouter.get('/', ensureUser, reportMethods.findAllReports)
 reportRouter.post('/create', ensureUser, reportMethods.createReport)

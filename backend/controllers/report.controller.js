@@ -16,9 +16,8 @@ exports.createReport = (req, res) => {
         reportedBy: req.body.reportedBy,
         timestaps: req.body.timestaps
     })
-}
 
-report.save()
+    report.save()
     .then((data) => {
         res.status(200).send(
             {
@@ -32,6 +31,8 @@ report.save()
             message: err.message || "Couldn't save the Report for some reason  ¯\_(ツ)_/¯"
         })
     })
+
+}
 
 exports.findOneReport = (req, res) => {
     User.findById(req.params.reportId)

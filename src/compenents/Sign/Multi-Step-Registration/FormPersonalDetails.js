@@ -26,12 +26,12 @@ export class FormPersonalDetails extends Component {
             fullWidth
             maxWidth='sm'
           >
-            <AppBar title="Enter Personal Details" />
+            <AppBar title="Enter Personal Details (optional)" />
             <TextField
-              placeholder="Enter Your Occupation"
-              label="Occupation"
-              onChange={handleChange('occupation')}
-              defaultValue={values.occupation}
+              placeholder="Enter Your Profile Picture"
+              label="Profile Picture"
+              onChange={handleChange('profilePhoto')}
+              defaultValue={values.profilePhoto}
               margin="normal"
               fullWidth
             />
@@ -54,7 +54,24 @@ export class FormPersonalDetails extends Component {
               fullWidth
             />
             <br />
-
+            <TextField
+              placeholder="Enter Your Age"
+              label="Age"
+              onChange={handleChange('age')}
+              defaultValue={values.age}
+              margin="normal"
+              fullWidth
+            />
+            <br />
+            <TextField
+              placeholder="Enter Your Pronouns"
+              label="Bio"
+              onChange={handleChange('bio')}
+              defaultValue={values.bio}
+              margin="normal"
+              fullWidth
+            />
+            <br />
             <Button
               color="secondary"
               variant="contained"

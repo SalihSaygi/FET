@@ -12,6 +12,7 @@ import {ContactsProvider} from './contexts/ContactProvider'
 import {ConversationsProvider} from './contexts/ConversationProvider';
 import {SocketIOProvider} from './contexts/SocketIOProvider';
 import ErrorPage from './compenents/ErrorPage.js'
+import MapPage from './compenents/MapPage'
 
 function App() {
 
@@ -38,6 +39,7 @@ function App() {
         </Route>
         <Route path="/register" component={Register} />
         <Route path="/login" component={LoginPage} />
+        <Route path="/map" component={MapPage} />
         <Route path="*" component={ErrorPage} />
         </div>
       </Router>

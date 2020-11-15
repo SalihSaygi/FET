@@ -10,10 +10,18 @@ export class Register extends Component {
     nickname: '',
     firstName: '',
     lastName: '',
+    password: '',
     email: '',
-    occupation: '',
-    city: '',
-    bio: ''
+    phoneNumber: '',
+    currentRank: '',
+    role: '',
+    adress: '',
+    numberOfFindings: '',
+    profilePhoto: '',
+    reports: '',
+    age: '',
+    pronouns: '',
+    nationality: '',
   };
 
   // Proceed to next step
