@@ -3,6 +3,8 @@ const express = require('express')
 const path = require('path')
 const http = require('http')
 const cors = require('cors')
+const morgan = require('morgan')
+const helmet = require('helmet')
 const io = require('socket.io')(5000)
 require('dotenv').config({ path: '../.env' })
 const URI = process.env.URI
@@ -14,11 +16,10 @@ const session = require('express-session')
 const localPassport = require('./config/passport-local')
 const googlePassport = require('./config/passport-google')
 const mongoose = require('mongoose')
-const Redis = requrie('ioredis')
-const connectToRedis = require('connect-redis')(session)
-const RedisStore = connectToRedis(session)
+const Redis = require('ioredis')
+const RedisStore = require('connect-redis')(session)
+const REDIS_OPTIONS = require('./config/redis')
 const connectMongoDB = require('./config/db')
-connectMongoDB()
 const grid = require('gridfs-stream')
 const socketioJwt = require('socketio-jwt')
 const app = express()
@@ -26,21 +27,23 @@ const server = http.createServer(app);
 //Server Config
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
-app.use(cors())
+app.use(cors({
+    origin: 'http://localhost:3031'
+}))
+app.use(helmet())
+app.use(morgan('common'))
 
-const client = newRedis({
-    port,
-    host
-})
+app.enable('trust proxy')
 
-const sessionStore = new RedisStore({ client })
+const client = new Redis({ REDIS_OPTIONS })
 
 app.use(
     session({
+      ...SESSION_OPTIONS,
       secret: "nebakiyorsunlan",
       resave: false,
       saveUninitialized: true,
-      store: sessionStore,
+      store: new RedisStore({ client }),
       cookie: {
           //lasts 1 day
         maxAge: 24*60*60*1000
@@ -58,10 +61,7 @@ const newPusher = new pusher({
   useTLS: true
 });
 
-localPassport(
-    passport,
-    email => users.find(user => user.email === email),
-    id => users.find(user => user.id === id)
+localPassport(passport, email => users.find(user => user.email === email), id => users.find(user => user.id === id)
 )
 
 //Routes
@@ -81,7 +81,7 @@ app.use('/', ensureGuest, (req, res) => {
 app.use('/admin-dashboard', ensureAdmin, adminDashboardRouter)
 app.use('/auth', googleAuthRouter)
 
-app.post('/login/', 
+app.post('/login', 
     ensureGuest, 
     passport.authenticate(['local', 'passport-google-oauth']),
         function(req, res) {
@@ -98,7 +98,7 @@ app.get('/logout', ensureUser, function(req, res){
 app.post('/register', ensureGuest, userMethods.createUser)
 
 //Location Middleware
-const location = require('./chatUtils/location')
+const location = require('./helpers/location.helper')
 app.use(location)
 
 //SocketIO
@@ -132,8 +132,6 @@ storageCon.once('open', () => {
 
 const maxSize = 5 * 1000 * 1000;
 
-const upload = multer({ storage })
-
 const storage = new gridFsStorage({
     url: URI,
     file: (req, file) => {
@@ -152,12 +150,19 @@ const storage = new gridFsStorage({
     }
 })
 
+const upload = multer({ storage })
+
 app.post('/upload/file', upload.single('file'), (req, res) => {
     res.status(201).send(req.file)
 })
 
 app.use(passport.initialize())
 app.use(passport.session())
+
+const { notFound, errorHandler } = require('./helpers/middlewares.helpers')
+
+app.use(notFound);
+app.use(errorHandler);
 
 app.listen(port, () => {
     console.log(`Server started on ${port}`)

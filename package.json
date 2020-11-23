@@ -15,10 +15,12 @@
     "classnames": "^2.2.6",
     "clsx": "^1.1.1",
     "eslint-config-react-app": "^6.0.0",
+    "helmet": "^4.2.0",
     "mapbox-gl": "^1.12.0",
     "material-ui-dropzone": "^3.5.0",
     "material-ui-icons": "^1.0.0-beta.36",
     "mongodb-stitch-browser-sdk": "^4.6.0",
+    "morgan": "^1.10.0",
     "prop-types": "^15.7.2",
     "react": "^16.13.1",
     "react-bootstrap": "^1.4.0",
@@ -33,12 +35,15 @@
   },
   "scripts": {
     "babel-version": "babel --version",
+    "docker-up": "docker-compose up -d",
+    "docker-stop": "docker-compose stop",
+    "docker-down": "docker-compose down",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
-  "proxy": "http://localhost:3000",
+  "proxy": "http://localhost:3031",
   "secure": false,
   "eslintConfig": {
     "extends": "react-app"
@@ -71,16 +76,6 @@
     "@types/react-router-dom": "^5.1.6",
     "@typescript-eslint/eslint-plugin": "^4.7.0",
     "@typescript-eslint/parser": "^4.7.0",
-    "eslint": "7.2.0",
-    "eslint-config-airbnb": "18.2.1",
-    "eslint-config-node": "^4.1.0",
-    "eslint-config-prettier": "^6.15.0",
-    "eslint-plugin-import": "2.22.1",
-    "eslint-plugin-jsx-a11y": "6.4.1",
-    "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-prettier": "^3.1.4",
-    "eslint-plugin-react": "^7.21.5",
-    "eslint-plugin-react-hooks": "4.0.0",
     "prettier": "^2.1.2",
     "typescript": "^4.0.5"
   }

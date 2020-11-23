@@ -9,7 +9,7 @@ const ReportSchema = mongoose.Schema({
     },
     bounty: {
         type: Number,
-        required: true,
+        required: false,
         trim: true,
         select: false
     },
@@ -27,7 +27,8 @@ const ReportSchema = mongoose.Schema({
     },
     imageOrVideo: {
         data: Buffer,
-        contentType: String
+        contentType: String,
+        required: true
     },
     forWho: {
         type: mongoose.Schema.ObjectId, ref: 'User'

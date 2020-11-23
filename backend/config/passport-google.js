@@ -1,7 +1,7 @@
 const GoogleStrategy = require('passport-google-oauth20').Strategy
 const mongoose = require('mongoose')
-const GoogleUser = require('../models/googleUser.model')
-require('dotenv').config({path: ".env"})
+const User = require('../models/user.model')
+require('dotenv').config({path: '.env'})
 
 module.exports = (passport) => {
   passport.use(
@@ -35,11 +35,10 @@ module.exports = (passport) => {
     )
   )
 
-  passport.serializeUser((user, done) => {
-    done(null, user.id)
+  passport.serializeUser((googleUser, done) => {
+    done(null, googleUser.id)
   })
 
-  passport.deserializeUser((id, done) => {
-    User.findById(id, (err, user) => done(err, user))
-  })
-}
+  passport.deserializeUser((googleId, done) => {
+    User.findById(googleId, (err, googleUser) => done(err, googleUser))
+  })}

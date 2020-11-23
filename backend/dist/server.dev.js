@@ -1,5 +1,11 @@
 "use strict";
 
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(source, true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(source).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 //Server Config
 var express = require('express');
 
@@ -8,6 +14,10 @@ var path = require('path');
 var http = require('http');
 
 var cors = require('cors');
+
+var morgan = require('morgan');
+
+var helmet = require('helmet');
 
 var io = require('socket.io')(5000);
 
@@ -33,15 +43,13 @@ var googlePassport = require('./config/passport-google');
 
 var mongoose = require('mongoose');
 
-var Redis = requrie('ioredis');
+var Redis = require('ioredis');
 
-var connectToRedis = require('connect-redis')(session);
+var RedisStore = require('connect-redis')(session);
 
-var RedisStore = connectToRedis(session);
+var REDIS_OPTIONS = require('./config/redis');
 
 var connectMongoDB = require('./config/db');
-
-connectMongoDB();
 
 var grid = require('gridfs-stream');
 
@@ -54,24 +62,27 @@ app.use(express.json());
 app.use(express.urlencoded({
   extended: false
 }));
-app.use(cors());
-var client = newRedis({
-  port: port,
-  host: host
+app.use(cors({
+  origin: 'http://localhost:3031'
+}));
+app.use(helmet());
+app.use(morgan('common'));
+app.enable('trust proxy');
+var client = new Redis({
+  REDIS_OPTIONS: REDIS_OPTIONS
 });
-var sessionStore = new RedisStore({
-  client: client
-});
-app.use(session({
+app.use(session(_objectSpread({}, SESSION_OPTIONS, {
   secret: "nebakiyorsunlan",
   resave: false,
   saveUninitialized: true,
-  store: sessionStore,
+  store: new RedisStore({
+    client: client
+  }),
   cookie: {
     //lasts 1 day
     maxAge: 24 * 60 * 60 * 1000
   }
-}));
+})));
 var port = process.env.PORT || 3000;
 var newPusher = new pusher({
   appId: "1100018",
@@ -109,7 +120,7 @@ app.use('/', ensureGuest, function (req, res) {
 });
 app.use('/admin-dashboard', ensureAdmin, adminDashboardRouter);
 app.use('/auth', googleAuthRouter);
-app.post('/login/', ensureGuest, passport.authenticate(['local', 'passport-google-oauth']), function (req, res) {
+app.post('/login', ensureGuest, passport.authenticate(['local', 'passport-google-oauth']), function (req, res) {
   // If this function gets called, authentication was successful.
   // `req.user` contains the authenticated user.
   res.redirect('/dashboard');
@@ -120,7 +131,7 @@ app.get('/logout', ensureUser, function (req, res) {
 });
 app.post('/register', ensureGuest, userMethods.createUser); //Location Middleware
 
-var location = require('./chatUtils/location');
+var location = require('./helpers/location.helper');
 
 app.use(location); //SocketIO
 
@@ -146,9 +157,6 @@ storageCon.once('open', function () {
   gfs.collection('videos');
 });
 var maxSize = 5 * 1000 * 1000;
-var upload = multer({
-  storage: storage
-});
 var storage = new gridFsStorage({
   url: URI,
   file: function file(req, _file) {
@@ -165,11 +173,21 @@ var storage = new gridFsStorage({
     });
   }
 });
+var upload = multer({
+  storage: storage
+});
 app.post('/upload/file', upload.single('file'), function (req, res) {
   res.status(201).send(req.file);
 });
 app.use(passport.initialize());
 app.use(passport.session());
+
+var _require2 = require('./helpers/middlewares.helpers'),
+    notFound = _require2.notFound,
+    errorHandler = _require2.errorHandler;
+
+app.use(notFound);
+app.use(errorHandler);
 app.listen(port, function () {
   console.log("Server started on ".concat(port));
 });

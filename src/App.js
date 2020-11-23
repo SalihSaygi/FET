@@ -7,10 +7,7 @@ import LoginPage from './compenents/Sign/LoginPage'
 import { Register } from './compenents/Sign/Multi-Step-Registration/UserForm'
 import AdminDashboard from './compenents/AdminDashboard'
 import useLocalStorage from './hooks/useLocalStorage';
-import MessagingPage from './compenents/Message/MessagingPage'
-import {ContactsProvider} from './contexts/ContactProvider'
-import {ConversationsProvider} from './contexts/ConversationProvider';
-import {SocketIOProvider} from './contexts/SocketIOProvider';
+import MessageComp from './compenents/Message/MessageComp'
 import ErrorPage from './compenents/ErrorPage.js'
 import MapPage from './compenents/MapPage'
 
@@ -27,19 +24,11 @@ function App() {
         <Route path="/create" component={CreateExercise} />
         <Route path="/users" component={CreateUser} />
         <Route path="/reports" component={CreateUser} /> */ }
-        <Route path="/admin-dashboard" component={AdminDashboard} /> 
-        <Route path="/message">
-          <SocketIOProvider>
-            <ContactsProvider>
-              <ConversationsProvider>
-                <MessagingPage/>
-              </ConversationsProvider>
-            </ContactsProvider>
-          </SocketIOProvider>
-        </Route>
-        <Route path="/register" component={Register} />
-        <Route path="/login" component={LoginPage} />
-        <Route path="/map" component={MapPage} />
+        <Route path="/admin-dashboard" exact component={AdminDashboard} /> 
+        <Route path="/message" exact component={MessageComp}/>
+        <Route path="/register" exact component={Register} />
+        <Route path="/login" exact component={LoginPage} />
+        <Route path="/map" exact component={MapPage} />
         <Route path="*" component={ErrorPage} />
         </div>
       </Router>

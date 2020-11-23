@@ -1,7 +1,6 @@
 const User = require('../models/user.model')
+const googlePassport = require('../config/passport-google')
 const bcrypt = require('bcrypt')
-
-
 
 exports.createUser = (req, res) => {
 
@@ -21,6 +20,7 @@ exports.createUser = (req, res) => {
         password: bcrypt.hashSync(req.body.password, 10),
         hash: hash,
         salt: salt,
+        googleId: googlePassport.googleId,
         email: req.body.email,
         phoneNumber: req.body.phoneNumber,
         currentRank: req.body.currentRank,
@@ -28,9 +28,9 @@ exports.createUser = (req, res) => {
         address: req.body.adress,
         numberOfFindings: req.body.numberOfFindings,
         profilePhoto: req.body.profilePhoto,
-        age: req.body.details.age,
-        pronoun: req.body.details.pronoun,
-        nationality: req.body.details.nationality
+        age: req.body.age,
+        pronoun: req.body.pronoun,
+        nationality: req.body.nationality
     })
 
 
@@ -80,12 +80,14 @@ exports.findAllUsers = (req, res) => {
                 }, 
                 users
                 )
+            console.log(users)
         })
         .catch((err) => {
             res.status(500).json({
                 message: err.message || "Couldn't get Users for some reason ¯\\_(ツ)_/¯"
             })
         })
+        .limit(20)
 }
 
 //Delete METHODS

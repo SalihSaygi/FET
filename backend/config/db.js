@@ -1,23 +1,22 @@
-const mongoose = require('mongoose');
+const {
+    MONGO_USERNAME = 'admin',
+    MONGO_PASSWORD = 'secret',
+    MONGO_HOST = 'localhost',
+    MONGO_PORT = 27017,
+    MONGO_DATABASE = 'kaster'
+} = process.env
 
-require('dotenv').config({ path: '../../.env' })
-const URI = process.env.URI || "mongodb://localhost/mern-stack"
+const URI = 
+    `mongodb://
+    ${MONGO_USERNAME}:
+    ${encodeURIComponent(MONGO_PASSWORD)}@
+    ${MONGO_HOST}:
+    ${MONGO_PORT}/
+    ${MONGO_DATABASE}`
 
-const connectMongoDB = async () => {
-    try {
-        const connection = await mongoose.connect(URI, 
-        { 
-            useNewUrlParser: true, 
-            useCreateIndex: true, 
-            useUnifiedTopology: true
-        })
-
-        console.log(`MongoDB Connected: ${connection.connection.host}`)
-    } catch (err) {
-        
-        console.error(err)
-        process.exit(1)
-    }
+const MONGO_OPTIONS = {
+    useNewUrlParser: true, 
+    useCreateIndex: true, 
+    useUnifiedTopology: true
 }
 
-module.exports = connectMongoDB
