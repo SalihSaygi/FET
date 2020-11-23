@@ -30,7 +30,9 @@ exports.createUser = (req, res) => {
         profilePhoto: req.body.profilePhoto,
         age: req.body.age,
         pronoun: req.body.pronoun,
-        nationality: req.body.nationality
+        nationality: req.body.nationality,
+        bio: req.body.bio,
+        resetPasswordLink: 
     })
 
 
