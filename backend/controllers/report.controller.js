@@ -9,10 +9,14 @@ exports.createReport = (req, res) => {
         })
     }
     const report = new Report({
+        animalType: req.body.animalType,
+        bounty: req.body.bounty,
         rateOfReport: req.body.rateOfReport,
         location: req.body.location,
         explanation: req.body.explanation,
-        imageURL: req.body.imageURL,
+        imageOrVideo: req.body.imageOrVideo,
+        forWho: req.body.forWho,
+        comment: req.body.comment,
         reportedBy: req.body.reportedBy,
         timestaps: req.body.timestaps
     })
@@ -35,7 +39,7 @@ exports.createReport = (req, res) => {
 }
 
 exports.findOneReport = (req, res) => {
-    User.findById(req.params.reportId)
+    Report.findById(req.query.reportId)
         .then((report) => {
             if(!report) {
                 return res.status(404).json({
@@ -52,21 +56,16 @@ exports.findOneReport = (req, res) => {
         })
         .catch((err) => {
             return res.status(500).json({
-                message: err + "\n| Found it but couldn't retrieve the report with id: " + req.params.reportId + " |"
+                message: err + "Found it but couldn't retrieve the report with id: " + req.params.reportId + " |"
             })
         })
 }
 
 exports.findAllReports = (req, res) => {
-    User.find()
+    Report.find()
         .sort({ timestaps: -1 })
         .then((reports) => {
-            res.status(200).json(
-                {
-                    message: "Here is all reports"
-                }, 
-                users
-                )
+            res.status(200).json(reports)
         })
         .catch((err) => {
             res.status(500).json({
@@ -76,23 +75,22 @@ exports.findAllReports = (req, res) => {
 }
 
 exports.deleteReport = (req, res) => {
-    User.findByIdAndRemove(req.params.reportId)
+    Report.findByIdAndRemove(req.query.reportId)
         .then((report) => {
             if(!report) {
                 return res.status(404).json({
-                    message: "Couldn't find the report with id: " + req.params.reportId
+                    message: "Couldn't find the report with id: " + req.query.reportId
                 })
             }
             res.status(200).json(
                 {
-                    message: 
-                        "Deleted the user with id: " + req.params.id
+                    message: "Deleted the report with id: " + req.query.reportId
                 }
             )
         })
         .catch((err) => {
             return res.status(500).json({
-                message: "Couldn't delete user"
+                message: "Couldn't delete report"
             })
         })
 }
@@ -103,18 +101,18 @@ exports.updateReport = (req, res) => {
             message: "Fill in the required fiels"
         })
     }
-    User.findByIdAndUpdate(req.params.reportId, req.body, { new: true})
+    Report.findByIdAndUpdate(req.query.reportId, req.body, { new: true})
         .then((report) => {
             if(!report) {
                 return res.status(404).json({
-                    message: "Couldn't find the user with id: " + req.params.reportId,
+                    message: "Couldn't find the report with id: " + req.query.reportId,
                 })
             }
             res.status(200).json(report)
         })
         .catch((err) => {
             return res.status(200).json(
-                { message: err + "\n| Found it but couldn't retrieve the user with id: " + req.params.id + " |" }
+                { message: err + "\n| Found it but couldn't retrieve the report with id: " + req.query.reportId + " |" }
             )
         })
 }

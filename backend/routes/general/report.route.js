@@ -5,8 +5,8 @@ const { ensureUser } = require('../../config/ensureRoles')
 
 reportRouter.get('/', ensureUser, reportMethods.findAllReports)
 reportRouter.post('/create', ensureUser, reportMethods.createReport)
-reportRouter.get('/:reportId', ensureUser, reportMethods.findOneReport)
-reportRouter.put('/:reportId', ensureUser, reportMethods.updateReport)
+reportRouter.get('/', ensureUser, reportMethods.findOneReport)
+reportRouter.put('/:reportId    ', ensureUser, reportMethods.updateReport)
 reportRouter.delete('/:reportId', ensureUser, reportMethods.deleteReport)
 
 module.exports = reportRouter

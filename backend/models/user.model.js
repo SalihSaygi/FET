@@ -98,10 +98,6 @@ const UserSchema = mongoose.Schema({
         type: String,
         required: false
     },
-    resetPasswordLink: {
-        data: String,
-        default: ''
-    },
     }, {
     timestamps: true,
 }, opts)
