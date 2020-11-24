@@ -5,7 +5,6 @@ const http = require('http')
 const cors = require('cors')
 const morgan = require('morgan')
 const helmet = require('helmet')
-const io = require('socket.io')(5000)
 require('dotenv').config({ path: '../.env' })
 const URI = process.env.URI
 const passport = require('passport')
@@ -18,17 +17,17 @@ const googlePassport = require('./config/passport-google')
 const mongoose = require('mongoose')
 const Redis = require('ioredis')
 const RedisStore = require('connect-redis')(session)
-const REDIS_OPTIONS = require('./config/redis')
-const connectMongoDB = require('./config/db')
+const {REDIS_OPTIONS, SESSION_OPTIONS} = require('./config/redis')
 const grid = require('gridfs-stream')
 const socketioJwt = require('socketio-jwt')
 const app = express()
-const server = http.createServer(app);
+const server = http.createServer(app)
+const io = require('socket.io').listen(server);
 //Server Config
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 app.use(cors({
-    origin: 'http://localhost:3031'
+    origin: 'http://localhost:3051'
 }))
 app.use(helmet())
 app.use(morgan('common'))

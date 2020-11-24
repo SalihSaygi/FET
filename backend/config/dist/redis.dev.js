@@ -30,9 +30,13 @@ var _process$env2 = process.env,
     SESSION_NAME = _process$env2$SESSION2 === void 0 ? 'SID' : _process$env2$SESSION2,
     _process$env2$SESSION3 = _process$env2.SESSION_IDLE_TIMEOUT,
     SESSION_IDLE_TIMEOUT = _process$env2$SESSION3 === void 0 ? HALF_HOUR : _process$env2$SESSION3;
+
+var _require = require('./serverConfig'),
+    IN_PROD = _require.IN_PROD;
+
 var _process$env$NODE_ENV = process.env.NODE_ENV,
     NODE_ENV = _process$env$NODE_ENV === void 0 ? 'development' : _process$env$NODE_ENV;
-var IN_PROD = NODE_ENV === 'production';
+var SESSION_ABSOLUTE_TIMEOUT = +(process.env.SESSION_ABSOLUTE_TIMEOUT || SIX_HOURS);
 var SESSION_OPTIONS = {
   secret: SESSION_SECRET,
   name: SESSION_NAME,
@@ -45,4 +49,4 @@ var SESSION_OPTIONS = {
   resave: false,
   saveUninitialize: false
 };
-module.exports = REDIS_OPTIONS, SESSION_OPTIONS;
+module.exports = REDIS_OPTIONS, SESSION_OPTIONS, SESSION_ABSOLUTE_TIMEOUT;

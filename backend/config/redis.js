@@ -31,11 +31,13 @@ const {
     SESSION_IDLE_TIMEOUT = HALF_HOUR
 } = process.env
 
+const { IN_PROD } = require('./serverConfig')
+
 const {
     NODE_ENV = 'development'
 } = process.env
 
-const IN_PROD = NODE_ENV === 'production'
+const SESSION_ABSOLUTE_TIMEOUT = +(process.env.SESSION_ABSOLUTE_TIMEOUT || SIX_HOURS)
 
 const SESSION_OPTIONS = {
     secret: SESSION_SECRET,
@@ -50,4 +52,5 @@ const SESSION_OPTIONS = {
     saveUninitialize: false
 }
 
-module.exports = REDIS_OPTIONS, SESSION_OPTIONS
+module.exports = REDIS_OPTIONS, SESSION_OPTIONS, SESSION_ABSOLUTE_TIMEOUT
+

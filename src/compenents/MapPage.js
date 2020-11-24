@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import ReactMapGL, { Marker, Popup } from 'react-map-gl';
 
 import getReports from '../hooks/reportsAPI'
-import LogEntryForm from './LogEntryForm';
+import ReportForm from './ReportForm';
 
 const MapPage = () => {
   const [reports, setReports] = useState([]);
@@ -16,13 +16,17 @@ const MapPage = () => {
     zoom: 3
   });
 
-  const getEntries = async () => {
+  const getReporting = async () => {
+    try {
     const reports = await getReports();
-    setReports(reports);
+    setReports(reports)
+    } catch(error) {
+      console.log('Eror getting reports')
+    }
   };
 
   useEffect(() => {
-    getEntries();
+    getReporting();
   }, []);
 
   const showAddMarkerPopup = (event) => {
@@ -127,9 +131,9 @@ const MapPage = () => {
             onClose={() => setAddEntryLocation(null)}
             anchor="top" >
             <div className="popup">
-              <LogEntryForm onClose={() => {
+              <ReportPage onClose={() => {
                 setAddEntryLocation(null);
-                getEntries();
+                getReporting();
               }} location={addEntryLocation} />
             </div>
           </Popup>

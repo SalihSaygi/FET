@@ -19,6 +19,16 @@ const ReportSchema = mongoose.Schema({
         trim: true,
         select: false
     },
+    latitude: {
+        type: Number,
+        required: true,
+        trim: true
+    },
+    longtitude: {
+        type: Number,
+        required: true,
+        trim: true
+    },
     explanation: {
         type: String,
         required: false,
@@ -27,8 +37,7 @@ const ReportSchema = mongoose.Schema({
     },
     imageOrVideo: {
         data: Buffer,
-        contentType: String,
-        required: true
+        contentType: String
     },
     forWho: {
         type: mongoose.Schema.ObjectId, ref: 'User'

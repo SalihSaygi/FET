@@ -19,8 +19,6 @@ var morgan = require('morgan');
 
 var helmet = require('helmet');
 
-var io = require('socket.io')(5000);
-
 require('dotenv').config({
   path: '../.env'
 });
@@ -47,23 +45,26 @@ var Redis = require('ioredis');
 
 var RedisStore = require('connect-redis')(session);
 
-var REDIS_OPTIONS = require('./config/redis');
-
-var connectMongoDB = require('./config/db');
+var _require = require('./config/redis'),
+    REDIS_OPTIONS = _require.REDIS_OPTIONS,
+    SESSION_OPTIONS = _require.SESSION_OPTIONS;
 
 var grid = require('gridfs-stream');
 
 var socketioJwt = require('socketio-jwt');
 
 var app = express();
-var server = http.createServer(app); //Server Config
+var server = http.createServer(app);
+
+var io = require('socket.io').listen(server); //Server Config
+
 
 app.use(express.json());
 app.use(express.urlencoded({
   extended: false
 }));
 app.use(cors({
-  origin: 'http://localhost:3031'
+  origin: 'http://localhost:3051'
 }));
 app.use(helmet());
 app.use(morgan('common'));
@@ -101,10 +102,10 @@ localPassport(passport, function (email) {
   });
 }); //Routes
 
-var _require = require('./config/ensureRoles'),
-    ensureUser = _require.ensureUser,
-    ensureGuest = _require.ensureGuest,
-    ensureAdmin = _require.ensureAdmin;
+var _require2 = require('./config/ensureRoles'),
+    ensureUser = _require2.ensureUser,
+    ensureGuest = _require2.ensureGuest,
+    ensureAdmin = _require2.ensureAdmin;
 
 var adminDashboardRouter = require('./routes/admin/userAdmin.route');
 
@@ -182,9 +183,9 @@ app.post('/upload/file', upload.single('file'), function (req, res) {
 app.use(passport.initialize());
 app.use(passport.session());
 
-var _require2 = require('./helpers/middlewares.helpers'),
-    notFound = _require2.notFound,
-    errorHandler = _require2.errorHandler;
+var _require3 = require('./helpers/middlewares.helpers'),
+    notFound = _require3.notFound,
+    errorHandler = _require3.errorHandler;
 
 app.use(notFound);
 app.use(errorHandler);

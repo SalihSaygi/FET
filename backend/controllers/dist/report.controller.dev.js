@@ -1,6 +1,6 @@
 "use strict";
 
-var Report = require('../models/report.model');
+var reportModule = require('../models/report.model');
 
 var mongoose = require('mongoose');
 
@@ -13,15 +13,17 @@ exports.createReport = function (req, res) {
     });
   }
 
-  var report = new Report({
+  var report = new reportModule({
     animalType: req.body.animalType,
     bounty: req.body.bounty,
     rateOfReport: req.body.rateOfReport,
     location: req.body.location,
+    latitude: req.body.latitude,
+    longtitude: req.body.longtitude,
     explanation: req.body.explanation,
     imageOrVideo: req.body.imageOrVideo,
     forWho: req.body.forWho,
-    comment: req.body.comment,
+    comments: req.body.comments,
     reportedBy: req.body.reportedBy,
     timestaps: req.body.timestaps
   });

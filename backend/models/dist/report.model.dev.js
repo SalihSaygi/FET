@@ -29,8 +29,7 @@ var ReportSchema = mongoose.Schema({
   },
   imageOrVideo: {
     data: Buffer,
-    contentType: String,
-    required: true
+    contentType: String
   },
   forWho: {
     type: mongoose.Schema.ObjectId,

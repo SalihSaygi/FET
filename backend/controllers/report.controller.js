@@ -1,4 +1,4 @@
-const Report = require('../models/report.model')
+const reportModule = require('../models/report.model')
 const mongoose = require('mongoose')
 const bcrypt = require('bcrypt')
 
@@ -8,15 +8,17 @@ exports.createReport = (req, res) => {
             message: "Fill in the required fiels"
         })
     }
-    const report = new Report({
+    const report = new reportModule({
         animalType: req.body.animalType,
         bounty: req.body.bounty,
         rateOfReport: req.body.rateOfReport,
         location: req.body.location,
+        latitude: req.body.latitude,
+        longtitude: req.body.longtitude,
         explanation: req.body.explanation,
         imageOrVideo: req.body.imageOrVideo,
         forWho: req.body.forWho,
-        comment: req.body.comment,
+        comments: req.body.comments,
         reportedBy: req.body.reportedBy,
         timestaps: req.body.timestaps
     })
