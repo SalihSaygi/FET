@@ -39,11 +39,13 @@ var localPassport = require('./config/passport-local');
 
 var googlePassport = require('./config/passport-google');
 
+var RateLimit = require('express-rate-limit');
+
 var mongoose = require('mongoose');
 
 var Redis = require('ioredis');
 
-var RedisStore = require('connect-redis')(session);
+var RedisStore = require('rate-limit-redis')(session);
 
 var _require = require('./config/redis'),
     REDIS_OPTIONS = _require.REDIS_OPTIONS,
@@ -64,14 +66,26 @@ app.use(express.urlencoded({
   extended: false
 }));
 app.use(cors({
-  origin: 'http://localhost:3051'
+  origin: process.env.ORIGIN_URL
 }));
 app.use(helmet());
 app.use(morgan('common'));
-app.enable('trust proxy');
+app.enable('trust proxy', 1);
 var client = new Redis({
   REDIS_OPTIONS: REDIS_OPTIONS
 });
+var limiter = new RateLimit({
+  store: new RedisStore({
+    client: client
+  }),
+  windowMs: 15 * 60 * 1000,
+  //15 minutes
+  max: 100,
+  // limit each IP to 100 requests per windowMs
+  delayMs: 0 // disable delaying - full speed until the max limit is reached
+
+});
+app.use(limiter);
 app.use(session(_objectSpread({}, SESSION_OPTIONS, {
   secret: "nebakiyorsunlan",
   resave: false,

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import { useForm } from 'react-hook-form';
@@ -8,6 +8,10 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import UploadForm from './ImageOrVideoUploadForm'
+import ListSubheader from '@material-ui/core/ListSubheader';
+import Typography from '@material-ui/core/Typography';
+import Slider from '@material-ui/core/Slider'
+import Alert from '@material-ui/lab/Alert';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -34,30 +38,45 @@ function valuetext(value) {
 }
 
 export default function ReportForm() {
-  
+
   const classes = useStyles()
+
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const { post, handleSubmit } = useForm();
-  
+
+  const { register, handleSubmit, errors } = useForm();
+
+  //Data
+  const [title, setTitle] = useState('')
+  const [animalType, setAnimalType] = useState('')
+  const [animalRace, setAnimalRace] = useState('')
+  const [isSuccessfull, setIsSuccessfull] = useState(true)
+
   const onSubmit = async (data) => {
     try {
-      setLoading(true);
-      data.latitude = location.latitude;
-      data.longitude = location.longitude;
-      await createReport(data);
-      onClose();
+      setLoading(true)
+      // data.latitude = location.latitude;
+      // data.longitude = location.longitude;
+      await createReport(data)
+      setLoading(false)
     } catch (error) {
-      console.error(error);
-      setError(error.message);
-      setLoading(false);
+      console.error(error)
+      setIsSuccessfull(false)
+      setLoading(false)
     }
   };
+
+  const handleChange = event => {
+    const isCheckbox = event.target.type === "checkbox"
+    this.setState({
+      [event.target.name]: isCheckbox
+        ? event.target.checked
+        : event.target.value
+    })
+  }
 
     return (
         <>
             <form className={classes.root} autoComplete="off" onSubmit={handleSubmit(onSubmit)}>
-              { error ? <h3 className="error">{error}</h3> : null}
                 <TextField
                 id="standard-basic" 
                 label="Title"
@@ -65,12 +84,13 @@ export default function ReportForm() {
                 placeholder="Title"
                 helperText="Be Descriptive"
                 fullWidth
+                inputRef={register({required: true, minLength: 6, maxLength: 16})}
                 margin="normal"
                 InputLabelProps={{
                     shrink: true,
-                ref={post}
                 }}
                 />
+                { errors.title && "Title is required"}
                 <FormControl variant="filled" className={classes.formControl}>
                   <InputLabel id="demo-simple-select-filled-label">Animal Type</InputLabel>
                   <Select
@@ -91,7 +111,7 @@ export default function ReportForm() {
                     <MenuItem value="Deer">Thirty</MenuItem>
                   </Select>
                 </FormControl>
-                <TextField id="filled-basic" label="Race" variant="filled" ref={post}/>
+                <TextField id="filled-basic" label="Race" variant="filled" inputRef={register}/>
                 <Typography id="discrete-slider" gutterBottom>
                   Bounty
                 </Typography>
@@ -130,6 +150,7 @@ export default function ReportForm() {
                 <UploadForm label="Upload"/>
                 <button disabled={loading}>{loading ? 'Loading...' : 'Submit'}</button>
             </form>
+            { isSuccessfull === true ? <Alert variant="outlined" severity="error">Unknown Error Submitting</Alert> : null }
         </>
     )
 }

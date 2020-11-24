@@ -14,6 +14,7 @@ exports.createReport = function (req, res) {
   }
 
   var report = new reportModule({
+    title: req.body.title,
     animalType: req.body.animalType,
     bounty: req.body.bounty,
     rateOfReport: req.body.rateOfReport,

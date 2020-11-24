@@ -1,6 +1,12 @@
 const mongoose = require('mongoose')
 
 const ReportSchema = mongoose.Schema({
+    title: {
+        type: String,
+        required: true,
+        trim: true,
+        select: false
+    },
     animalType: {
         type: Number,
         required: true,

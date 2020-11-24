@@ -9,6 +9,7 @@ exports.createReport = (req, res) => {
         })
     }
     const report = new reportModule({
+        title: req.body.title,
         animalType: req.body.animalType,
         bounty: req.body.bounty,
         rateOfReport: req.body.rateOfReport,

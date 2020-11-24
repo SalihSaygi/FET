@@ -3,6 +3,12 @@
 var mongoose = require('mongoose');
 
 var ReportSchema = mongoose.Schema({
+  title: {
+    type: String,
+    required: true,
+    trim: true,
+    select: false
+  },
   animalType: {
     type: Number,
     required: true,
@@ -20,6 +26,16 @@ var ReportSchema = mongoose.Schema({
     required: true,
     trim: true,
     select: false
+  },
+  latitude: {
+    type: Number,
+    required: true,
+    trim: true
+  },
+  longtitude: {
+    type: Number,
+    required: true,
+    trim: true
   },
   explanation: {
     type: String,

@@ -14,12 +14,28 @@ const pusher = require('pusher')
 const session = require('express-session')
 const localPassport = require('./config/passport-local')
 const googlePassport = require('./config/passport-google')
+const RateLimit = require('express-rate-limit')
+const RedisStore = require('express-brute-redis');
+const slowDown = require("express-slow-down");
+const {RateLimiterMemory, BurstyRateLimiter} = require('rate-limiter-flexible')
+const burstyLimiter = new BurstyRateLimiter(
+    new RateLimiterMemory({
+      points: 2,
+      duration: 1,
+    }),
+    new RateLimiterMemory({
+      keyPrefix: 'burst',
+      points: 5,
+      duration: 10,
+    })
+  )  
 const mongoose = require('mongoose')
 const Redis = require('ioredis')
-const RedisStore = require('connect-redis')(session)
+const RedisStore = require('rate-limit-redis')(session)
 const {REDIS_OPTIONS, SESSION_OPTIONS} = require('./config/redis')
 const grid = require('gridfs-stream')
 const socketioJwt = require('socketio-jwt')
+
 const app = express()
 const server = http.createServer(app)
 const io = require('socket.io').listen(server);
@@ -27,14 +43,38 @@ const io = require('socket.io').listen(server);
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 app.use(cors({
-    origin: 'http://localhost:3051'
+    origin: process.env.ORIGIN_URL
 }))
 app.use(helmet())
 app.use(morgan('common'))
 
-app.enable('trust proxy')
+app.enable('trust proxy', 1)
 
-const client = new Redis({ REDIS_OPTIONS })
+const clientLimit = new Redis({ REDIS_OPTIONS })
+const clientSpeed = new Redis({ REDIS_OPTIONS })
+
+const limiter = new RateLimit({
+    store: new RedisStore({
+      clientLimit
+    }),
+    windowMs: 15 * 60 * 1000, //15 minutes
+    max: 50, // limit each IP to 100 requests per windowMs
+    delayMs: 0 // disable delaying - full speed until the max limit is reached
+})
+
+const speedLimiter = slowDown({
+    store: new RedisStore({
+        clientSpeed
+    }),
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    delayAfter: 10, // allow 100 requests per 15 minutes, then...
+    delayMs: 333, // begin adding 500ms of delay per request above 100:
+    maxDelayMs: 5000 // max 5 seconds delay
+});
+   
+app.use(speedLimiter);
+
+app.use(limiter)
 
 app.use(
     session({

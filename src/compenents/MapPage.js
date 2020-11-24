@@ -131,7 +131,7 @@ const MapPage = () => {
             onClose={() => setAddEntryLocation(null)}
             anchor="top" >
             <div className="popup">
-              <ReportPage onClose={() => {
+              <ReportForm onClose={() => {
                 setAddEntryLocation(null);
                 getReporting();
               }} location={addEntryLocation} />
