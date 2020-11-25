@@ -1,18 +1,12 @@
 "use strict";
 
-var reportModule = require('../models/report.model');
+var reportModule = require('../models/privateReport.model');
 
 var mongoose = require('mongoose');
 
 var bcrypt = require('bcrypt');
 
 exports.createReport = function (req, res) {
-  if (!req.body.rateOfReport || !req.body.location) {
-    return res.status(400).json({
-      message: "Fill in the required fiels"
-    });
-  }
-
   var report = new reportModule({
     title: req.body.title,
     animalType: req.body.animalType,
@@ -89,12 +83,6 @@ exports.deleteReport = function (req, res) {
 };
 
 exports.updateReport = function (req, res) {
-  if (!req.body.rateOfReport || !req.body.location) {
-    return res.status(400).json({
-      message: "Fill in the required fiels"
-    });
-  }
-
   Report.findByIdAndUpdate(req.query.reportId, req.body, {
     "new": true
   }).then(function (report) {

@@ -1,13 +1,9 @@
-const reportModule = require('../models/report.model')
+const reportModule = require('../models/privateReport.model')
 const mongoose = require('mongoose')
 const bcrypt = require('bcrypt')
 
 exports.createReport = (req, res) => {
-    if(!req.body.rateOfReport || !req.body.location) {
-        return res.status(400).json({
-            message: "Fill in the required fiels"
-        })
-    }
+
     const report = new reportModule({
         title: req.body.title,
         animalType: req.body.animalType,
@@ -99,11 +95,7 @@ exports.deleteReport = (req, res) => {
 }
 
 exports.updateReport = (req, res) => {
-    if(!req.body.rateOfReport || !req.body.location) {
-        return res.status(400).json({
-            message: "Fill in the required fiels"
-        })
-    }
+    
     Report.findByIdAndUpdate(req.query.reportId, req.body, { new: true})
         .then((report) => {
             if(!report) {

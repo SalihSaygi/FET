@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 
-const ReportSchema = mongoose.Schema({
+const PrivateReportSchema = mongoose.Schema({
     title: {
         type: String,
         required: true,
@@ -8,10 +8,14 @@ const ReportSchema = mongoose.Schema({
         select: false
     },
     animalType: {
-        type: Number,
+        type: String,
         required: true,
         trim: true,
         select: false
+    },
+    animalRace: {
+        type: String,
+        required: true,
     },
     bounty: {
         type: Number,
@@ -48,15 +52,10 @@ const ReportSchema = mongoose.Schema({
     forWho: {
         type: mongoose.Schema.ObjectId, ref: 'User'
     },
-    comments: [{
-        text: String,
-        created: { type: Date, default: Date.now },
-        postedBy: { type: mongoose.Schema.ObjectId, ref: 'User'}
-    }],
     reportedBy: {type: mongoose.Schema.Types.ObjectId, ref: 'User'}
 }, 
     {
     timestamps: true,
 })
 
-module.exports = Report = mongoose.model('Report', ReportSchema)
+module.exports = Report = mongoose.model('PrivateReport', PrivateReportSchema)
