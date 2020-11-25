@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import clsx from 'clsx';
-import Dialog from '@material-ui/core/Dialog';
+import PropTypes from 'prop-types';
 import AppBar from '@material-ui/core/AppBar';
-import { ThemeProvider as MuiThemeProvider, makeStyles } from '@material-ui/core/styles';
+import { ThemeProvider as MuiThemeProvider, makeStyles, createMuiTheme } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
@@ -12,6 +12,16 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 import FormControl from '@material-ui/core/FormControl';
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
+import Box from '@material-ui/core/Box';
+// import { Brightness7 as DarkThemeIcon } from '@material-ui/icons';
+// import { Brightness3 as LightThemeIcon } from '@material-ui/icons';
+import { blue } from '@material-ui/core/colors';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+import CssBaseline from '@material-ui/core/CssBaseline';
+// import Grid from '@material-ui/core/Grid'
+// import NumberFormat from 'react-number-format';
+import MaskedInput from 'react-text-mask';
+// import Toolbar from '@material-ui/core/Toolbar'
 
 const useStyles = makeStyles((theme) => ({ 
   margin: {
@@ -21,18 +31,97 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(3),
   },
   textField: {
-    width: '25ch',
+    width: '35ch',
+  },
+  submitButton: {
+    background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
+    borderRadius: 3,
+    border: 0,
+    color: 'white',
+    height: 48,
+    padding: '0 30px',
+    boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
+  },
+  logo: {
+    maxWidth: 70,
   }
 }))
 
+const light = {
+  palette: {
+    type: "light",
+    secondary: {
+      main: blue[200]
+    }
+  }
+};
+const dark = {
+  palette: {
+    type: "dark",
+    secondary: {
+      main: blue[600]
+    },
+  }
+};
+
 export default function FormUserDetails(props) {
 
+  //Dark/Light Theme (1st-way)
+  // const [isDark, setIsDark] = useState(true)
+  // const icon = isDark ? <DarkThemeIcon/> : <LightThemeIcon/>
+  // const appliedTheme = createMuiTheme(isDark ? dark : light)
+
+  //Dark/Light Theme (2nd-way)
+  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
+  const icon = prefersDarkMode ? <DarkThemeIcon/> : <LightThemeIcon/>
+  const appliedTheme = useMemo(() => createMuiTheme({
+    palette: {
+        type: prefersDarkMode ? 'dark' : 'light',
+      },
+    }),
+    [prefersDarkMode],
+  )
+  
   const classes = useStyles()
 
   const [values, setValues] = useState({
     password: '',
     showPassword: false,
   });
+
+  //Phone Number (2)
+  function TextMaskCustom(props) {
+    const { inputRef, ...other } = props;
+  
+    return (
+      <MaskedInput
+        {...other}
+        ref={(ref) => {
+          inputRef(ref ? ref.inputElement : null);
+        }}
+        mask={['(', /[1-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/]}
+        placeholderChar={'\u2000'}
+        showMask
+      />
+    )
+  }
+  
+  TextMaskCustom.propTypes = {
+    inputRef: PropTypes.func.isRequired,
+  }
+
+  const [mask, setMask] = useState({
+    textmask: '(1  )    -    '
+  })
+
+
+  const handleMaskChange = (event) => {
+    setMask({
+      ...mask,
+      [event.target.name]: event.target.value,
+    })
+  }
+  //---------------------
 
   const handleChange = (prop) => (event) => {
     setValues({ ...values, [prop]: event.target.value });
@@ -49,62 +138,97 @@ export default function FormUserDetails(props) {
   const handleSubmit = e => {
     e.preventDefault();
     props.nextStep();
+  }
+
+  // rgb(34, 47, 63) //dark theme
+  // rgb(163, 200, 245) //light theme
 
   return (
     <>
-      <MuiThemeProvider>
-        <>
-          <Dialog
-            open
-            fullWidth
-            maxWidth='sm'
-          >
+      {/* <IconButton
+        edge="end"
+        color="inherit"
+        aria-label="mode"
+        // onClick={() => setIsDark(!isDark)} //(1st-way)
+      >
+        {icon}
+      </IconButton> */}
+      
+      <img src="../../../sources/images/logo.png" alt="logo" className={classes.logo} />
+      <MuiThemeProvider theme={appliedTheme} >
+        <CssBaseline/>
+        <Box display="flex" alignItems="center" justifyContent="center" flexDirection="column">
             <AppBar title="Enter User Details" />
               <TextField
+                item xs={4}
+                style={{textAlign: "center"}}
                 placeholder="Enter Your Nickname"
                 label="Nickname"
                 onChange={handleChange('nickname')}
                 defaultValue={values.nickname}
                 margin="normal"
-                fullWidth
+                className={classes.textField}
               />
               <TextField
                 placeholder="Enter Your First Name"
+                item xs={4}
+                style={{textAlign: "center"}}
                 label="First Name"
                 onChange={handleChange('firstName')}
                 defaultValue={values.firstName}
                 margin="normal"
-                fullWidth
+                className={classes.textField}
               />
               <br />
               <TextField
+                item xs={4} 
+                style={{textAlign: "center"}}
                 placeholder="Enter Your Last Name"
                 label="Last Name"
                 onChange={handleChange('lastName')}
                 defaultValue={values.lastName}
                 margin="normal"
-                fullWidth
+                className={classes.textField}
               />
               <br />
               <TextField
+                item xs={4} 
+                style={{textAlign: "center"}}
                 placeholder="Enter Your Email"
                 label="Email"
                 onChange={handleChange('email')}
                 defaultValue={values.email}
                 margin="normal"
-                fullWidth
+                className={classes.textField}
               />
               <br />
               <TextField
+                item xs={4} 
+                style={{textAlign: "center"}}
                 placeholder="Enter Your Phone Number"
                 label="Phone Number"
                 onChange={handleChange('phoneNumber')}
                 defaultValue={values.phoneNumber}
                 margin="normal"
-                fullWidth
+                className={classes.textField}
               />
+              {/* Phone Number (2) */}
+              {/* <FormControl>
+                <InputLabel htmlFor="formatted-text-mask-input">Phone Number</InputLabel>
+                <Input
+                  value={mask.textmask}
+                  onChange={handleMaskChange}
+                  name="textmask"
+                  id="formatted-text-mask-input"
+                  inputComponent={TextMaskCustom}
+                  style={{width: "31ch"}}
+                  />
+                  </FormControl> */}
               <br />
-              <FormControl className={clsx(classes.margin, classes.textField)}>
+              <FormControl 
+                item xs={4} 
+                style={{textAlign: "center"}} 
+                className={clsx(classes.margin, classes.textField)}>
                 <InputLabel htmlFor="standard-adornment-password">Password</InputLabel>
                 <Input
                   id="standard-adornment-password"
@@ -126,13 +250,15 @@ export default function FormUserDetails(props) {
               </FormControl>
               <br/>
               <Button
+                item xs={4} 
+                style={{textAlign: "center"}}
                 color="primary"
                 variant="contained"
                 onClick={handleSubmit}
+                className={classes.submitButton}
               >Continue</Button>
-          </Dialog>
-        </>
+        </Box>
       </MuiThemeProvider>
     </>
-    );
-}}
+    )
+}

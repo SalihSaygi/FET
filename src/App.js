@@ -4,7 +4,7 @@ import LandingPage from './compenents/landingPage/LandingPage'
 import LoginPage from './compenents/Sign/LoginPage'
 // import Navbar from './compenents/common/Navbar'
 // import RegisterPage from './compenents/Sign/RegisterPage'
-import { Register } from './compenents/Sign/Multi-Step-Registration/UserForm'
+import Register from './compenents/Sign/Multi-Step-Registration/UserForm'
 import AdminDashboard from './compenents/AdminDashboard'
 import useLocalStorage from './hooks/useLocalStorage';
 import MessageComp from './compenents/Message/MessageComp'

@@ -21,11 +21,7 @@ export class FormPersonalDetails extends Component {
     return (
       <MuiThemeProvider>
         <>
-          <Dialog
-            open
-            fullWidth
-            maxWidth='sm'
-          >
+          <Box display="flex" alignItems="center" justifyContent="center" flexDirection="column">
             <AppBar title="Enter Personal Details (optional)" />
             <TextField
               placeholder="Enter Your Profile Picture"
@@ -33,7 +29,7 @@ export class FormPersonalDetails extends Component {
               onChange={handleChange('profilePhoto')}
               defaultValue={values.profilePhoto}
               margin="normal"
-              fullWidth
+              className={classes.textField}
             />
             <br />
             <TextField
@@ -42,7 +38,7 @@ export class FormPersonalDetails extends Component {
               onChange={handleChange('city')}
               defaultValue={values.city}
               margin="normal"
-              fullWidth
+              className={classes.textField}
             />
             <br />
             <TextField
@@ -51,7 +47,7 @@ export class FormPersonalDetails extends Component {
               onChange={handleChange('bio')}
               defaultValue={values.bio}
               margin="normal"
-              fullWidth
+              className={classes.textField}
             />
             <br />
             <TextField
@@ -60,7 +56,7 @@ export class FormPersonalDetails extends Component {
               onChange={handleChange('age')}
               defaultValue={values.age}
               margin="normal"
-              fullWidth
+              className={classes.textField}
             />
             <br />
             <TextField
@@ -69,7 +65,7 @@ export class FormPersonalDetails extends Component {
               onChange={handleChange('bio')}
               defaultValue={values.bio}
               margin="normal"
-              fullWidth
+              className={classes.textField}
             />
             <br />
             <Button
@@ -83,7 +79,7 @@ export class FormPersonalDetails extends Component {
               variant="contained"
               onClick={this.continue}
             >Continue</Button>
-          </Dialog>
+          </Box>
         </>
       </MuiThemeProvider>
     );
