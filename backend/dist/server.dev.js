@@ -41,15 +41,30 @@ var googlePassport = require('./config/passport-google');
 
 var RateLimit = require('express-rate-limit');
 
+var slowDown = require("express-slow-down");
+
+var _require = require('rate-limiter-flexible'),
+    RateLimiterMemory = _require.RateLimiterMemory,
+    BurstyRateLimiter = _require.BurstyRateLimiter;
+
+var burstyLimiter = new BurstyRateLimiter(new RateLimiterMemory({
+  points: 2,
+  duration: 1
+}), new RateLimiterMemory({
+  keyPrefix: 'burst',
+  points: 5,
+  duration: 10
+}));
+
 var mongoose = require('mongoose');
 
 var Redis = require('ioredis');
 
 var RedisStore = require('rate-limit-redis')(session);
 
-var _require = require('./config/redis'),
-    REDIS_OPTIONS = _require.REDIS_OPTIONS,
-    SESSION_OPTIONS = _require.SESSION_OPTIONS;
+var _require2 = require('./config/redis'),
+    REDIS_OPTIONS = _require2.REDIS_OPTIONS,
+    SESSION_OPTIONS = _require2.SESSION_OPTIONS;
 
 var grid = require('gridfs-stream');
 
@@ -71,20 +86,37 @@ app.use(cors({
 app.use(helmet());
 app.use(morgan('common'));
 app.enable('trust proxy', 1);
-var client = new Redis({
+var clientLimit = new Redis({
+  REDIS_OPTIONS: REDIS_OPTIONS
+});
+var clientSpeed = new Redis({
   REDIS_OPTIONS: REDIS_OPTIONS
 });
 var limiter = new RateLimit({
   store: new RedisStore({
-    client: client
+    clientLimit: clientLimit
   }),
   windowMs: 15 * 60 * 1000,
   //15 minutes
-  max: 100,
+  max: 50,
   // limit each IP to 100 requests per windowMs
   delayMs: 0 // disable delaying - full speed until the max limit is reached
 
 });
+var speedLimiter = slowDown({
+  store: new RedisStore({
+    clientSpeed: clientSpeed
+  }),
+  windowMs: 15 * 60 * 1000,
+  // 15 minutes
+  delayAfter: 10,
+  // allow 100 requests per 15 minutes, then...
+  delayMs: 333,
+  // begin adding 500ms of delay per request above 100:
+  maxDelayMs: 5000 // max 5 seconds delay
+
+});
+app.use(speedLimiter);
 app.use(limiter);
 app.use(session(_objectSpread({}, SESSION_OPTIONS, {
   secret: "nebakiyorsunlan",
@@ -116,10 +148,10 @@ localPassport(passport, function (email) {
   });
 }); //Routes
 
-var _require2 = require('./config/ensureRoles'),
-    ensureUser = _require2.ensureUser,
-    ensureGuest = _require2.ensureGuest,
-    ensureAdmin = _require2.ensureAdmin;
+var _require3 = require('./config/ensureRoles'),
+    ensureUser = _require3.ensureUser,
+    ensureGuest = _require3.ensureGuest,
+    ensureAdmin = _require3.ensureAdmin;
 
 var adminDashboardRouter = require('./routes/admin/userAdmin.route');
 
@@ -197,9 +229,9 @@ app.post('/upload/file', upload.single('file'), function (req, res) {
 app.use(passport.initialize());
 app.use(passport.session());
 
-var _require3 = require('./helpers/middlewares.helpers'),
-    notFound = _require3.notFound,
-    errorHandler = _require3.errorHandler;
+var _require4 = require('./helpers/middlewares.helpers'),
+    notFound = _require4.notFound,
+    errorHandler = _require4.errorHandler;
 
 app.use(notFound);
 app.use(errorHandler);

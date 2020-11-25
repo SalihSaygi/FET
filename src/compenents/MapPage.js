@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import ReactMapGL, { Marker, Popup } from 'react-map-gl';
 
 import getReports from '../hooks/reportsAPI'
-import ReportForm from './ReportForm';
+import RequestForm from './CRUDs/Requests/RequestCreate';
 
 const MapPage = () => {
   const [reports, setReports] = useState([]);
@@ -131,10 +131,11 @@ const MapPage = () => {
             onClose={() => setAddEntryLocation(null)}
             anchor="top" >
             <div className="popup">
-              <ReportForm onClose={() => {
+              <RequestForm onClose={() => {
                 setAddEntryLocation(null);
                 getReporting();
-              }} location={addEntryLocation} />
+              }} 
+              location={addEntryLocation} />
             </div>
           </Popup>
           </>

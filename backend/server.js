@@ -15,8 +15,7 @@ const session = require('express-session')
 const localPassport = require('./config/passport-local')
 const googlePassport = require('./config/passport-google')
 const RateLimit = require('express-rate-limit')
-const RedisStore = require('express-brute-redis');
-const slowDown = require("express-slow-down");
+const slowDown = require("express-slow-down")
 const {RateLimiterMemory, BurstyRateLimiter} = require('rate-limiter-flexible')
 const burstyLimiter = new BurstyRateLimiter(
     new RateLimiterMemory({
@@ -72,8 +71,7 @@ const speedLimiter = slowDown({
     maxDelayMs: 5000 // max 5 seconds delay
 });
    
-app.use(speedLimiter);
-
+app.use(speedLimiter)
 app.use(limiter)
 
 app.use(
@@ -100,8 +98,7 @@ const newPusher = new pusher({
   useTLS: true
 });
 
-localPassport(passport, email => users.find(user => user.email === email), id => users.find(user => user.id === id)
-)
+localPassport(passport, email => users.find(user => user.email === email), id => users.find(user => user.id === id))
 
 //Routes
 

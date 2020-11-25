@@ -10,6 +10,7 @@ import useLocalStorage from './hooks/useLocalStorage';
 import MessageComp from './compenents/Message/MessageComp'
 import ErrorPage from './compenents/ErrorPage.js'
 import MapPage from './compenents/MapPage'
+import RequestForm from './compenents/CRUDs/Requests/RequestCreate'
 
 function App() {
 
@@ -27,9 +28,10 @@ function App() {
         <Route path="/admin-dashboard" exact component={AdminDashboard} /> 
         <Route path="/message" exact component={MessageComp}/>
         <Route path="/register" exact component={Register} />
+        <Route path="/reports/create" component={RequestForm}/>
         <Route path="/login" exact component={LoginPage} />
-        <Route path="/map" exact component={MapPage} />
-        <Route path="*" component={ErrorPage} />
+        <Route path="/map" component={MapPage} />
+        <Route path="/error" component={ErrorPage} />
         </div>
       </Router>
     </>
