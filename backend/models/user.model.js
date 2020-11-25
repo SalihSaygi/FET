@@ -89,11 +89,6 @@ const UserSchema = mongoose.Schema({
         enum: ['he/him', 'she/her', 'others'],
         required: false
     },
-    nationality: {
-        type: String,
-        trim: true,
-        required: false
-    },
     bio: {
         type: String,
         required: false

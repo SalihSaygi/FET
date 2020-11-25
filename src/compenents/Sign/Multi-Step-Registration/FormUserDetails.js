@@ -15,12 +15,12 @@ import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import Box from '@material-ui/core/Box';
 // import { Brightness7 as DarkThemeIcon } from '@material-ui/icons';
 // import { Brightness3 as LightThemeIcon } from '@material-ui/icons';
-import { blue } from '@material-ui/core/colors';
+// import { blue } from '@material-ui/core/colors';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import CssBaseline from '@material-ui/core/CssBaseline';
 // import Grid from '@material-ui/core/Grid'
 // import NumberFormat from 'react-number-format';
-import MaskedInput from 'react-text-mask';
+// import MaskedInput from 'react-text-mask';
 // import Toolbar from '@material-ui/core/Toolbar'
 
 const useStyles = makeStyles((theme) => ({ 
@@ -47,22 +47,22 @@ const useStyles = makeStyles((theme) => ({
   }
 }))
 
-const light = {
-  palette: {
-    type: "light",
-    secondary: {
-      main: blue[200]
-    }
-  }
-};
-const dark = {
-  palette: {
-    type: "dark",
-    secondary: {
-      main: blue[600]
-    },
-  }
-};
+// const light = {
+//   palette: {
+//     type: "light",
+//     secondary: {
+//       main: blue[200]
+//     }
+//   }
+// };
+// const dark = {
+//   palette: {
+//     type: "dark",
+//     secondary: {
+//       main: blue[600]
+//     },
+//   }
+// };
 
 export default function FormUserDetails(props) {
 
@@ -73,7 +73,6 @@ export default function FormUserDetails(props) {
 
   //Dark/Light Theme (2nd-way)
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
-  const icon = prefersDarkMode ? <DarkThemeIcon/> : <LightThemeIcon/>
   const appliedTheme = useMemo(() => createMuiTheme({
     palette: {
         type: prefersDarkMode ? 'dark' : 'light',
@@ -84,51 +83,52 @@ export default function FormUserDetails(props) {
   
   const classes = useStyles()
 
-  const [values, setValues] = useState({
+  const [passValue, setPassValue] = useState({
     password: '',
     showPassword: false,
   });
 
   //Phone Number (2)
-  function TextMaskCustom(props) {
-    const { inputRef, ...other } = props;
+  // function TextMaskCustom(props) {
+  //   const { inputRef, ...other } = props;
   
-    return (
-      <MaskedInput
-        {...other}
-        ref={(ref) => {
-          inputRef(ref ? ref.inputElement : null);
-        }}
-        mask={['(', /[1-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/]}
-        placeholderChar={'\u2000'}
-        showMask
-      />
-    )
-  }
+  //   return (
+  //     <MaskedInput
+  //       {...other}
+  //       ref={(ref) => {
+  //         inputRef(ref ? ref.inputElement : null);
+  //       }}
+  //       mask={['(', /[1-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/]}
+  //       placeholderChar={'\u2000'}
+  //       showMask
+  //     />
+  //   )
+  // }
   
-  TextMaskCustom.propTypes = {
-    inputRef: PropTypes.func.isRequired,
-  }
+  // TextMaskCustom.propTypes = {
+  //   inputRef: PropTypes.func.isRequired,
+  // }
 
-  const [mask, setMask] = useState({
-    textmask: '(1  )    -    '
-  })
+  // const [mask, setMask] = useState({
+  //   textmask: '(1  )    -    '
+  // })
 
 
-  const handleMaskChange = (event) => {
-    setMask({
-      ...mask,
-      [event.target.name]: event.target.value,
-    })
-  }
-  //---------------------
+  // const handleMaskChange = (event) => {
+  //   setMask({
+  //     ...mask,
+  //     [event.target.name]: event.target.value,
+  //   })
+  // }
 
-  const handleChange = (prop) => (event) => {
-    setValues({ ...values, [prop]: event.target.value });
-  };
+  //----------------------------------------------
+
+  // const props.handleChange = (prop) => (event) => {
+  //   setValues({ ...props, [prop]: event.target.value });
+  // };
 
   const handleClickShowPassword = () => {
-    setValues({ ...values, showPassword: !values.showPassword });
+    setPassValue({ ...props, showPassword: !props.showPassword });
   };
 
   const handleMouseDownPassword = (event) => {
@@ -164,8 +164,8 @@ export default function FormUserDetails(props) {
                 style={{textAlign: "center"}}
                 placeholder="Enter Your Nickname"
                 label="Nickname"
-                onChange={handleChange('nickname')}
-                defaultValue={values.nickname}
+                onChange={props.handleChange('nickname')}
+                defaultValue={props.nickname}
                 margin="normal"
                 className={classes.textField}
               />
@@ -174,8 +174,8 @@ export default function FormUserDetails(props) {
                 item xs={4}
                 style={{textAlign: "center"}}
                 label="First Name"
-                onChange={handleChange('firstName')}
-                defaultValue={values.firstName}
+                onChange={props.handleChange('firstName')}
+                defaultValue={props.firstName}
                 margin="normal"
                 className={classes.textField}
               />
@@ -185,8 +185,8 @@ export default function FormUserDetails(props) {
                 style={{textAlign: "center"}}
                 placeholder="Enter Your Last Name"
                 label="Last Name"
-                onChange={handleChange('lastName')}
-                defaultValue={values.lastName}
+                onChange={props.handleChange('lastName')}
+                defaultValue={props.lastName}
                 margin="normal"
                 className={classes.textField}
               />
@@ -196,8 +196,8 @@ export default function FormUserDetails(props) {
                 style={{textAlign: "center"}}
                 placeholder="Enter Your Email"
                 label="Email"
-                onChange={handleChange('email')}
-                defaultValue={values.email}
+                onChange={props.handleChange('email')}
+                defaultValue={props.email}
                 margin="normal"
                 className={classes.textField}
               />
@@ -207,8 +207,8 @@ export default function FormUserDetails(props) {
                 style={{textAlign: "center"}}
                 placeholder="Enter Your Phone Number"
                 label="Phone Number"
-                onChange={handleChange('phoneNumber')}
-                defaultValue={values.phoneNumber}
+                onChange={props.handleChange('phoneNumber')}
+                defaultValue={props.phoneNumber}
                 margin="normal"
                 className={classes.textField}
               />
@@ -232,9 +232,9 @@ export default function FormUserDetails(props) {
                 <InputLabel htmlFor="standard-adornment-password">Password</InputLabel>
                 <Input
                   id="standard-adornment-password"
-                  type={values.showPassword ? 'text' : 'password'}
-                  value={values.password}
-                  onChange={handleChange('password')}
+                  type={passValue.showPassword ? 'text' : 'password'}
+                  value={setPassValue.password}
+                  onChange={props.handleChange('password')}
                   endAdornment={
                     <InputAdornment position="end">
                       <IconButton
@@ -242,7 +242,7 @@ export default function FormUserDetails(props) {
                         onClick={handleClickShowPassword}
                         onMouseDown={handleMouseDownPassword}
                       >
-                        {values.showPassword ? <Visibility /> : <VisibilityOff />}
+                        {passValue.showPassword ? <Visibility /> : <VisibilityOff />}
                       </IconButton>
                     </InputAdornment>
                   }

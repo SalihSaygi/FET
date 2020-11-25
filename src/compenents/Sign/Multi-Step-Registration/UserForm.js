@@ -9,6 +9,7 @@ import StepLabel from '@material-ui/core/StepLabel';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
+import PropTypes from 'prop-types';
 
 const styles = theme => ({
   root: {
@@ -55,6 +56,13 @@ class Register extends Component {
     });
   };
 
+  resetStep = () => {
+    const { step } = this.state;
+    this.setState({
+      step: 1
+    })
+  }
+
   // Handle fields change
   handleChange = input => e => {
     this.setState({ [input]: e.target.value });
@@ -71,7 +79,7 @@ class Register extends Component {
           <FormUserDetails
             nextStep={this.nextStep}
             handleChange={this.handleChange}
-            values={values}
+            values={this.state.values}
           />
         );
       case 2:
@@ -80,7 +88,7 @@ class Register extends Component {
             nextStep={this.nextStep}
             prevStep={this.prevStep}
             handleChange={this.handleChange}
-            values={values}
+            values={this.state.values}
           />
         );
       case 3:
@@ -88,7 +96,7 @@ class Register extends Component {
           <Confirm
             nextStep={this.nextStep}
             prevStep={this.prevStep}
-            values={values}
+            values={this.state.values}
           />
         );
       case 4:
@@ -101,15 +109,16 @@ class Register extends Component {
 
   render() {
 
-    const { classes } = this.props;
-    const { step } = this.state;
     const { nickname, firstName, lastName, password, email, phoneNumber, adress, profilePhoto, age, pronouns, bio } = this.state;
     const values = { nickname, firstName, lastName, password, email, phoneNumber, adress, profilePhoto, age, pronouns, bio };
-    const steps = getSteps()
+
+    const { classes } = this.props;
+    const { step } = this.state;
+    const steps = this.getStepLabels()
     
-    render(
+    return(
     <>
-      <Stepper activeStep={activeStep} alternativeLabel>
+      <Stepper activeStep={step} alternativeLabel>
           {steps.map((label) => (
             <Step key={label}>
               <StepLabel>{label}</StepLabel>
@@ -117,24 +126,24 @@ class Register extends Component {
           ))}
         </Stepper>
         <div>
-          {activeStep === steps.length ? (
+          {step === steps.length ? (
             <div>
               <Typography className={classes.instructions}>All steps completed</Typography>
-              <Button onClick={handleReset}>Reset</Button>
+              <Button onClick={this.resetStep}>Reset</Button>
             </div>
           ) : (
             <div>
-              <Typography className={classes.instructions}>{getStepContent(activeStep)}</Typography>
+              <Typography className={classes.instructions}>{this.getStepContent(step)}</Typography>
               <div>
                 <Button
-                  disabled={activeStep === 0}
-                  onClick={handleBack}
+                  disabled={step === 0}
+                  onClick={this.prevStep}
                   className={classes.backButton}
                 >
                   Back
                 </Button>
-                <Button variant="contained" color="primary" onClick={handleNext}>
-                  {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
+                <Button variant="contained" color="primary" onClick={this.nextStep}>
+                  {step === steps.length - 1 ? 'Finish' : 'Next'}
                 </Button>
               </div>
             </div>
@@ -145,7 +154,7 @@ class Register extends Component {
   }
 }
 
-HigherOrderComponent.propTypes = {
+Register.propTypes = {
   classes: PropTypes.object.isRequired,
 }
   
