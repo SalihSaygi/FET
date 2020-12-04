@@ -12,22 +12,7 @@ const multer = require('multer')
 const gridFsStorage = require('multer-gridfs-storage')
 const pusher = require('pusher')
 const session = require('express-session')
-const localPassport = require('./config/passport-local')
 const googlePassport = require('./config/passport-google')
-const RateLimit = require('express-rate-limit')
-const slowDown = require("express-slow-down")
-const {RateLimiterMemory, BurstyRateLimiter} = require('rate-limiter-flexible')
-const burstyLimiter = new BurstyRateLimiter(
-    new RateLimiterMemory({
-      points: 2,
-      duration: 1,
-    }),
-    new RateLimiterMemory({
-      keyPrefix: 'burst',
-      points: 5,
-      duration: 10,
-    })
-  )  
 const mongoose = require('mongoose')
 const Redis = require('ioredis')
 const RedisStore = require('rate-limit-redis')(session)
@@ -49,6 +34,10 @@ app.use(morgan('common'))
 
 app.enable('trust proxy', 1)
 
+const RateLimit = require('express-rate-limit')
+const slowDown = require("express-slow-down")
+const {RateLimiterMemory, BurstyRateLimiter} = require('rate-limiter-flexible')
+
 const clientLimit = new Redis({ REDIS_OPTIONS })
 const clientSpeed = new Redis({ REDIS_OPTIONS })
 
@@ -60,7 +49,6 @@ const limiter = new RateLimit({
     max: 50, // limit each IP to 100 requests per windowMs
     delayMs: 0 // disable delaying - full speed until the max limit is reached
 })
-
 const speedLimiter = slowDown({
     store: new RedisStore({
         clientSpeed
@@ -70,9 +58,21 @@ const speedLimiter = slowDown({
     delayMs: 333, // begin adding 500ms of delay per request above 100:
     maxDelayMs: 5000 // max 5 seconds delay
 });
-   
+const burstyLimiter = new BurstyRateLimiter(
+    new RateLimiterMemory({
+      points: 2,
+      duration: 1,
+    }),
+    new RateLimiterMemory({
+      keyPrefix: 'burst',
+      points: 5,
+      duration: 10,
+    })
+)
+
 app.use(speedLimiter)
 app.use(limiter)
+app.use(burstyLimiter)
 
 app.use(
     session({
@@ -80,7 +80,7 @@ app.use(
       secret: "nebakiyorsunlan",
       resave: false,
       saveUninitialized: true,
-      store: new RedisStore({ client }),
+      store: new RedisStore({ Redis }),
       cookie: {
           //lasts 1 day
         maxAge: 24*60*60*1000
@@ -98,7 +98,7 @@ const newPusher = new pusher({
   useTLS: true
 });
 
-localPassport(passport, email => users.find(user => user.email === email), id => users.find(user => user.id === id))
+app.use(newPusher)
 
 //Routes
 
@@ -138,6 +138,8 @@ const location = require('./helpers/location.helper')
 app.use(location)
 
 //SocketIO
+io.use(wrap(session({ secret: "cats" })));
+
 io.sockets
     .on('connection', socketioJwt.authorize ({
         secret: 'your secret or public key',

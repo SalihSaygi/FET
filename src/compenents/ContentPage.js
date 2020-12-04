@@ -93,8 +93,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-
-
 function ContentPageNavbar() {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -278,7 +276,7 @@ function ReportOptions() {
           aria-haspopup="true"
           onClick={handleClick}
         >
-          <MoreVertIcon />
+          <MoreIcon />
         </IconButton>
         <Menu
           id="long-menu"
@@ -303,6 +301,19 @@ function ReportOptions() {
     );
   }
 
+function Comments() {
+  return (
+    <div style={{ width: '10%' }}>
+      <Box component="span" display="block" p={1} m={1} bgcolor="background.paper">
+        A great Video
+      </Box>
+      <Box component="span" display="block" p={1} m={1} bgcolor="background.paper">
+        It is a stupid Video
+      </Box>
+    </div>
+  )
+}
+
 function Media(props) {
     const { loading = false } = props;
     const classes = useStyles();
@@ -322,9 +333,7 @@ function Media(props) {
           }
           action={
             loading ? null : (
-              <IconButton aria-label="settings">
-                <MoreIcon />
-              </IconButton>
+              <ReportOptions/>
             )
           }
           title={
@@ -367,19 +376,6 @@ function Media(props) {
 Media.propTypes = {
     loading: PropTypes.bool,
 };
-  
-function Comments() {
-    return (
-      <div style={{ width: '10%' }}>
-        <Box component="span" display="block" p={1} m={1} bgcolor="background.paper">
-          A great Video
-        </Box>
-        <Box component="span" display="block" p={1} m={1} bgcolor="background.paper">
-          It is a stupid Video
-        </Box>
-      </div>
-    );
-  }
 
 function Reports() {
     return (
@@ -388,4 +384,11 @@ function Reports() {
             <Media owner/>
         </div>
     )
+}
+
+export function ContentPage() {
+  return(
+    <ContentPageNavbar/>
+    <Reports/>
+  )
 }

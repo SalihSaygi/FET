@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Route } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import LandingPage from './compenents/landingPage/LandingPage'
 import LoginPage from './compenents/Sign/LoginPage'
 // import Navbar from './compenents/common/Navbar'
@@ -11,15 +11,16 @@ import MessageComp from './compenents/Message/MessageComp'
 import ErrorPage from './compenents/ErrorPage.js'
 import MapPage from './compenents/MapPage'
 import RequestForm from './compenents/CRUDs/Requests/RequestCreate'
+import ContentPage from './compenents/ContentPage'
 
 function App() {
 
   return (
-    <>
       <Router>
-        <div className="container">
+        <div>
+          <Switch>
         {/* <Navbar /> */}
-        <br/>
+        {/* <br/>  */}
          <Route path="/" exact component={LandingPage} />
         { /*<Route path="/edit/:id" component={EditExercise} />
         <Route path="/create" component={CreateExercise} />
@@ -28,14 +29,15 @@ function App() {
         <Route path="/admin-dashboard" exact component={AdminDashboard} /> 
         <Route path="/message" exact component={MessageComp}/>
         <Route path="/register" exact component={Register} />
-        <Route path="/reports/create" component={RequestForm}/>
+        <Route path="/reports/create" exact component={RequestForm}/>
         <Route path="/login" exact component={LoginPage} />
-        <Route path="/map" component={MapPage} />
-        <Route path="/error" component={ErrorPage} />
+        <Route path="/map" exact component={MapPage} />
+        <Route path="/dashboard" exact compenent={ContentPage}/>
+        <Route path="/error" exact component={ErrorPage} />
+          </Switch>
         </div>
       </Router>
-    </>
-  );
+  )
 }
 
 export default App;

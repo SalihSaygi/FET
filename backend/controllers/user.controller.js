@@ -1,6 +1,8 @@
 const User = require('../models/user.model')
 const googlePassport = require('../config/passport-google')
 const bcrypt = require('bcrypt')
+const { sessionizeUser } = require('../helpers/middlewares.helpers')
+const localPassport = require('./config/passport-local')
 
 exports.createUser = (req, res) => {
 
@@ -33,6 +35,9 @@ exports.createUser = (req, res) => {
         bio: req.body.bio,
     })
 
+    const sessionUser = sessionizeUser(user)
+    req.session.user = sessionUser
+    res.send(sessionUser)
 
     user.save()
         .then((data) => {

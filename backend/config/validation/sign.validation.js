@@ -1,6 +1,6 @@
-const { check } = require('express-validator')
+const { check, validationResult } = require('express-validator/check')
 
-exports.signValid = [
+exports.signUpValid = [
     
     check('nickname', 'Name is required')
     .notEmpty()
@@ -28,8 +28,8 @@ exports.signValid = [
         min: 8
     })
     .withMessage('Password must contain at least 8 characters')
-    .matches(/\d/).
-    withMessage('password must contain a number')
+    .matches(/\d/)
+    .withMessage('password must contain a number')
 ]
 
 exports.validLogin = [

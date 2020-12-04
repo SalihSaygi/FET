@@ -14,7 +14,15 @@ const notFound = (req, res, next) => {
     });
   };
   
+  const sessionizeUser = user => {
+    return {
+      userId: user.id,
+      username: user.nickname
+    }
+  }
+
   module.exports = {
     notFound,
     errorHandler,
+    sessionizeUser
   };

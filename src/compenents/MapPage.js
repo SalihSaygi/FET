@@ -21,7 +21,7 @@ const MapPage = () => {
     const reports = await getReports();
     setReports(reports)
     } catch(error) {
-      console.log('Eror getting reports')
+      console.log('Error getting reports')
     }
   };
 

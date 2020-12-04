@@ -2,6 +2,8 @@ import React, { useState, useRef } from 'react'
 import { Tab, Nav, Button, Overlay, Tooltip, Modal } from 'react-bootstrap'
 import Conversations from './Conversations'
 import Contacts from './Contacts'
+import NewConversationModal from './NewConversationModal'
+import NewContactModal from './NewContactModal'
 
 const CONVERSATIONS_KEY = 'conversations'
 const CONTACTS_KEY = 'contacts'

@@ -6,6 +6,9 @@ var googlePassport = require('../config/passport-google');
 
 var bcrypt = require('bcrypt');
 
+var _require = require('../helpers/middlewares.helpers'),
+    sessionizeUser = _require.sessionizeUser;
+
 exports.createUser = function (req, res) {
   var saltHash = genPassword(req.body.password);
   var salt = saltHash.salt;
@@ -36,6 +39,7 @@ exports.createUser = function (req, res) {
     pronoun: req.body.pronoun,
     bio: req.body.bio
   });
+  var sessionUser = sessionizeUser(user);
   user.save().then(function (data) {
     res.json(data);
   })["catch"](function (err) {

@@ -35,26 +35,7 @@ var pusher = require('pusher');
 
 var session = require('express-session');
 
-var localPassport = require('./config/passport-local');
-
 var googlePassport = require('./config/passport-google');
-
-var RateLimit = require('express-rate-limit');
-
-var slowDown = require("express-slow-down");
-
-var _require = require('rate-limiter-flexible'),
-    RateLimiterMemory = _require.RateLimiterMemory,
-    BurstyRateLimiter = _require.BurstyRateLimiter;
-
-var burstyLimiter = new BurstyRateLimiter(new RateLimiterMemory({
-  points: 2,
-  duration: 1
-}), new RateLimiterMemory({
-  keyPrefix: 'burst',
-  points: 5,
-  duration: 10
-}));
 
 var mongoose = require('mongoose');
 
@@ -62,9 +43,9 @@ var Redis = require('ioredis');
 
 var RedisStore = require('rate-limit-redis')(session);
 
-var _require2 = require('./config/redis'),
-    REDIS_OPTIONS = _require2.REDIS_OPTIONS,
-    SESSION_OPTIONS = _require2.SESSION_OPTIONS;
+var _require = require('./config/redis'),
+    REDIS_OPTIONS = _require.REDIS_OPTIONS,
+    SESSION_OPTIONS = _require.SESSION_OPTIONS;
 
 var grid = require('gridfs-stream');
 
@@ -86,6 +67,15 @@ app.use(cors({
 app.use(helmet());
 app.use(morgan('common'));
 app.enable('trust proxy', 1);
+
+var RateLimit = require('express-rate-limit');
+
+var slowDown = require("express-slow-down");
+
+var _require2 = require('rate-limiter-flexible'),
+    RateLimiterMemory = _require2.RateLimiterMemory,
+    BurstyRateLimiter = _require2.BurstyRateLimiter;
+
 var clientLimit = new Redis({
   REDIS_OPTIONS: REDIS_OPTIONS
 });
@@ -116,14 +106,23 @@ var speedLimiter = slowDown({
   maxDelayMs: 5000 // max 5 seconds delay
 
 });
+var burstyLimiter = new BurstyRateLimiter(new RateLimiterMemory({
+  points: 2,
+  duration: 1
+}), new RateLimiterMemory({
+  keyPrefix: 'burst',
+  points: 5,
+  duration: 10
+}));
 app.use(speedLimiter);
 app.use(limiter);
+app.use(burstyLimiter);
 app.use(session(_objectSpread({}, SESSION_OPTIONS, {
   secret: "nebakiyorsunlan",
   resave: false,
   saveUninitialized: true,
   store: new RedisStore({
-    client: client
+    Redis: Redis
   }),
   cookie: {
     //lasts 1 day
@@ -138,15 +137,7 @@ var newPusher = new pusher({
   cluster: "us3",
   useTLS: true
 });
-localPassport(passport, function (email) {
-  return users.find(function (user) {
-    return user.email === email;
-  });
-}, function (id) {
-  return users.find(function (user) {
-    return user.id === id;
-  });
-}); //Routes
+app.use(newPusher); //Routes
 
 var _require3 = require('./config/ensureRoles'),
     ensureUser = _require3.ensureUser,
@@ -182,6 +173,9 @@ var location = require('./helpers/location.helper');
 
 app.use(location); //SocketIO
 
+io.use(wrap(session({
+  secret: "cats"
+})));
 io.sockets.on('connection', socketioJwt.authorize({
   secret: 'your secret or public key',
   timeout: 5000

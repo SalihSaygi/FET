@@ -1,14 +1,12 @@
-const io = require('socket.io-client')
-
-const rooms = {}
+const io = require('socket.io')
 
 const formatMessage = require('./chatUtils/messages')
 const {
     userJoin,
     getCurrentUser,
     userLeave,
-    getRoomUsers,
-    getUserRooms
+    getPostUsers,
+    getUserPosts
 } = require('./chatUtils/users')
 
 //Namespaces
@@ -29,34 +27,32 @@ exports.user = (socket) => {
         }
     })
 
-    socket.on('joinRoom', ({ username, room }) => {
-        const user = userJoin(socket.id, username, room)
+    socket.on('joinPost', ({ username, post }) => {
+        const user = userJoin(socket.id, username, post)
 
-        socket.join(user.room)
+        socket.to(user.post).emit('message', formatMessage(req.geoip, 'Live Chat, \n Connect with People'))
 
-        socket.to(user.room).emit('message', formatMessage(req.geoip, 'Live Chat, \n Connect with People'))
-
-        socket.broadcast.to(user.room).emit('message', formatMessage(req.geoip, `${user.username} has joined the chat`))
+        socket.broadcast.to(user.post).emit('message', formatMessage(req.geoip, `${user.username} has joined the chat`))
     })
 
-    socket.on('new-user', (room, name) => {
-        socket.join(room)
-        rooms[room].users[socket.id] = name
-        socket.to(room).broadcast.to('user-connected', name)
+    socket.on('new-user', (post, name) => {
+        socket.join(post)
+        posts[post].users[socket.id] = name
+        socket.to(post).broadcast.to('user-connected', name)
     })
     socket.on('send-message', () => {
-        socket.to(room).broadcast.emit('chat-message', {
+        socket.to(post).broadcast.emit('chat-message', {
             message: message,
-            name: rooms
-            [room]
+            name: posts
+            [post]
                 .users
             [socket.id]
         })
     })
     socket.on('disconnect', () => {
-        getUserRooms(socket).forEach(room => {
-            socket.to(room).broadcast.emit('user-disconnected', rooms[room].users[socket.id])
-            delete rooms[room].users[socket.id]
+        getUserPosts(socket).forEach(post => {
+            socket.to(post).broadcast.emit('user-disconnected', posts[post].users[socket.id])
+            delete posts[post].users[socket.id]
         })
     })
 }
@@ -72,34 +68,29 @@ exports.admin = (socket) => {
             next(new Error('Not Admin'))
         }
     }),
-    adminNamespace.on('joinRoom', ({ username, room }) => {
-        const user = userJoin(socket.id, username, room)
-
-        socket.join(user.room)
-
-        socket.to(user.room).emit('message', formatMessage(req.geoip, 'Live Chat, \n Connect with People'))
-
-        socket.broadcast.to(user.room).emit('message', formatMessage(req.geoip, `${user.username} has joined the chat`))
+    adminNamespace.on('joinPost', ({ username, post }) => {
+        const user = postJoin(socket.id, username, post)
+        socket.join(user.post)
     })
 
-    adminNamespace.on('new-user', (room, name) => {
-        socket.join(room)
-        rooms[room].users[socket.id] = name
-        socket.to(room).broadcast.to('user-connected', name)
+    adminNamespace.on('new-user', (post, name) => {
+        socket.join(post)
+        posts[post].users[socket.id] = name
+        socket.to(post).broadcast.to('user-connected', name)
     })
     adminNamespace.on('send-message', () => {
-        socket.to(room).broadcast.emit('chat-message', {
+        socket.to(post).broadcast.emit('chat-message', {
             message: message,
-            name: rooms
-            [room]
+            name: posts
+            [post]
                 .users
             [socket.id]
         })
     })
     adminNamespace.on('disconnect', () => {
-        getUserRooms(socket).forEach(room => {
-            socket.to(room).broadcast.emit('user-disconnected', rooms[room].users[socket.id])
-            delete rooms[room].users[socket.id]
+        getUserPosts(socket).forEach(post => {
+            socket.to(post).broadcast.emit('user-disconnected', posts[post].users[socket.id])
+            delete posts[post].users[socket.id]
         })
     })
 }

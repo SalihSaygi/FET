@@ -16,7 +16,15 @@ var errorHandler = function errorHandler(error, req, res, next) {
   });
 };
 
+var sessionizeUser = function sessionizeUser(user) {
+  return {
+    userId: user.id,
+    username: user.nickname
+  };
+};
+
 module.exports = {
   notFound: notFound,
-  errorHandler: errorHandler
+  errorHandler: errorHandler,
+  sessionizeUser: sessionizeUser
 };
