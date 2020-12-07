@@ -1,0 +1,11 @@
+{
+    "compilerOptions": {
+      "declaration": true,
+      "emitDeclarationOnly": true,
+      "isolatedModules": true,
+      "outDir": "./built",
+      "allowJs": true,
+      "target": "es5"
+    },
+    "include": ["./backend/**/*"]
+  }

@@ -85,8 +85,6 @@ exports.admin = function (socket) {
         post = _ref2.post;
     var user = postJoin(socket.id, username, post);
     socket.join(user.post);
-    socket.to(user.post).emit('message', formatMessage(req.geoip, 'Live Chat, \n Connect with People'));
-    socket.broadcast.to(user.post).emit('message', formatMessage(req.geoip, "".concat(user.username, " has joined the chat")));
   });
   adminNamespace.on('new-user', function (post, name) {
     socket.join(post);

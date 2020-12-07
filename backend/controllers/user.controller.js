@@ -2,7 +2,6 @@ const User = require('../models/user.model')
 const googlePassport = require('../config/passport-google')
 const bcrypt = require('bcrypt')
 const { sessionizeUser } = require('../helpers/middlewares.helpers')
-const localPassport = require('./config/passport-local')
 
 exports.createUser = (req, res) => {
 
@@ -45,6 +44,7 @@ exports.createUser = (req, res) => {
         })
         .catch((err) => {
             res.status(500).json({
+                // eslint-disable-next-line no-useless-escape
                 message: err.message || "Couldn't save the User for some reason  ¯\_(ツ)_/¯"
             })
         })

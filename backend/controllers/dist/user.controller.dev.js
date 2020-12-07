@@ -40,10 +40,13 @@ exports.createUser = function (req, res) {
     bio: req.body.bio
   });
   var sessionUser = sessionizeUser(user);
+  req.session.user = sessionUser;
+  res.send(sessionUser);
   user.save().then(function (data) {
     res.json(data);
   })["catch"](function (err) {
     res.status(500).json({
+      // eslint-disable-next-line no-useless-escape
       message: err.message || "Couldn't save the User for some reason  ¯\_(ツ)_/¯"
     });
   });

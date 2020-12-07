@@ -1,5 +1,9 @@
 "use strict";
 
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.MONGO_OPTIONS = exports.URI = void 0;
 var _process$env = process.env,
     _process$env$MONGO_US = _process$env.MONGO_USERNAME,
     MONGO_USERNAME = _process$env$MONGO_US === void 0 ? 'admin' : _process$env$MONGO_US,
@@ -12,8 +16,10 @@ var _process$env = process.env,
     _process$env$MONGO_DA = _process$env.MONGO_DATABASE,
     MONGO_DATABASE = _process$env$MONGO_DA === void 0 ? 'kaster' : _process$env$MONGO_DA;
 var URI = "mongodb://\n    ".concat(MONGO_USERNAME, ":\n    ").concat(encodeURIComponent(MONGO_PASSWORD), "@\n    ").concat(MONGO_HOST, ":\n    ").concat(MONGO_PORT, "/\n    ").concat(MONGO_DATABASE);
+exports.URI = URI;
 var MONGO_OPTIONS = {
   useNewUrlParser: true,
   useCreateIndex: true,
   useUnifiedTopology: true
 };
+exports.MONGO_OPTIONS = MONGO_OPTIONS;

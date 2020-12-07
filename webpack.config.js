@@ -29,6 +29,6 @@ module.exports = function(_env, argv) {
       ]
     },
     resolve: {
-      extensions: [".js", ".jsx"]
+      extensions: [".js", ".jsx", "ts"]
   }
-}
+}}
