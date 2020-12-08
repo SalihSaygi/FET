@@ -42,12 +42,12 @@ exports.findOneReport = (req, res) => {
         .then((report) => {
             if(!report) {
                 return res.status(404).json({
-                    message: "Couldn't find the report with id: " + req.params.reportId,
+                    message: "Couldn't find the report with id: " + req.query.reportId,
                 })
             }
             res.status(200).json(
                 {
-                    message: "Here is the report with id: " + req.params.reportId
+                    message: "Here is the report with id: " + req.query.reportId
                 },
                     report
             )
@@ -55,7 +55,7 @@ exports.findOneReport = (req, res) => {
         })
         .catch((err) => {
             return res.status(500).json({
-                message: err + "Found it but couldn't retrieve the report with id: " + req.params.reportId + " |"
+                message: err + "Found it but couldn't retrieve the report with id: " + req.query.reportId + " |"
             })
         })
 }
@@ -95,7 +95,6 @@ exports.deleteReport = (req, res) => {
 }
 
 exports.updateReport = (req, res) => {
-    
     Report.findByIdAndUpdate(req.query.reportId, req.body, { new: true})
         .then((report) => {
             if(!report) {

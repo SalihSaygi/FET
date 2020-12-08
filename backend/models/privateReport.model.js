@@ -17,12 +17,6 @@ const PrivateReportSchema = mongoose.Schema({
         type: String,
         required: true,
     },
-    bounty: {
-        type: Number,
-        required: false,
-        trim: true,
-        select: false
-    },
     location: {
         type: String,
         required: true,

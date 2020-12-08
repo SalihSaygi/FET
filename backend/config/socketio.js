@@ -20,7 +20,7 @@ const dbModerator = io.of('/dbModerator')
 exports.user = (socket) => {
     //Authorization
     io.use((socket, next) => {
-        if(isValid(socket.request)) {
+        if(socket.request) {
             next()
         } else {
             next(new Error('invalid'))
@@ -40,7 +40,7 @@ exports.user = (socket) => {
         posts[post].users[socket.id] = name
         socket.to(post).broadcast.to('user-connected', name)
     })
-    socket.on('send-message', () => {
+    socket.on('send-comment', () => {
         socket.to(post).broadcast.emit('chat-message', {
             message: message,
             name: posts

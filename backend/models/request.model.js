@@ -15,9 +15,11 @@ const RequestSchema = mongoose.Schema({
     },
     bounty: {
         type: Number,
-        required: false,
+        required: true,
         trim: true,
-        select: false
+        select: false,
+        min: 5,
+        max: 100
     },
     location: {
         type: String,
@@ -46,6 +48,9 @@ const RequestSchema = mongoose.Schema({
     }],
     requestedBy: {
         type: mongoose.Schema.Types.ObjectId, ref: 'User'
+    },
+    likes: {
+        type: Number
     }
 }, 
     {

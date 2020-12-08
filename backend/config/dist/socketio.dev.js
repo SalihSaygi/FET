@@ -21,7 +21,7 @@ var dbModerator = io.of('/dbModerator');
 exports.user = function (socket) {
   //Authorization
   io.use(function (socket, next) {
-    if (isValid(socket.request)) {
+    if (socket.request) {
       next();
     } else {
       next(new Error('invalid'));
@@ -39,7 +39,7 @@ exports.user = function (socket) {
     posts[post].users[socket.id] = name;
     socket.to(post).broadcast.to('user-connected', name);
   });
-  socket.on('send-message', function () {
+  socket.on('send-comment', function () {
     socket.to(post).broadcast.emit('chat-message', {
       message: message,
       name: posts[post].users[socket.id]

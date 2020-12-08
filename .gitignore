@@ -18,6 +18,10 @@
 .env.test.local
 .env.production.local
 .env
+data
+-p
+.github
+.vscode
 
 npm-debug.log*
 yarn-debug.log*
