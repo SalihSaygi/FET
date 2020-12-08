@@ -23,6 +23,8 @@ require('dotenv').config({
   path: '../.env'
 });
 
+var URI = process.env.URI;
+
 var passport = require('passport');
 
 var multer = require('multer');
@@ -46,6 +48,8 @@ var _require = require('./config/redis'),
     SESSION_OPTIONS = _require.SESSION_OPTIONS;
 
 var grid = require('gridfs-stream');
+
+var socketioJwt = require('socketio-jwt');
 
 var app = express();
 var server = http.createServer(app);
@@ -172,7 +176,10 @@ app.use(location); //SocketIO
 io.use(wrap(session({
   secret: "cats"
 })));
-io.sockets.on('connection', {}).on('authenticated', function (socket) {
+io.sockets.on('connection', socketioJwt.authorize({
+  secret: 'your secret or public key',
+  timeout: 5000
+})).on('authenticated', function (socket) {
   require('./config/chat.socket')(socket);
 
   return io;

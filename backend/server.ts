@@ -6,6 +6,7 @@ const cors = require('cors')
 const morgan = require('morgan')
 const helmet = require('helmet')
 require('dotenv').config({ path: '../.env' })
+const URI = process.env.URI
 const passport = require('passport')
 const multer = require('multer')
 const gridFsStorage = require('multer-gridfs-storage')
@@ -17,6 +18,7 @@ const RedisClient = require('ioredis')
 const RedisStore = require('rate-limit-redis')(session)
 const {REDIS_OPTIONS, SESSION_OPTIONS} = require('./config/redis')
 const grid = require('gridfs-stream')
+const socketioJwt = require('socketio-jwt')
 
 const app = express()
 const server = http.createServer(app)
@@ -139,8 +141,9 @@ app.use(location)
 io.use(wrap(session({ secret: "cats" })));
 
 io.sockets
-    .on('connection', ({
-
+    .on('connection', socketioJwt.authorize ({
+        secret: 'your secret or public key',
+        timeout: 5000
     }))
     .on('authenticated', (socket) => {
         require('./config/chat.socket')(socket)

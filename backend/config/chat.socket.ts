@@ -1,13 +1,7 @@
-const io = require('socket.io')
+import io = require('socket.io')
 
-const formatMessage = require('./chatUtils/messages')
-const {
-    userJoin,
-    getCurrentUser,
-    userLeave,
-    getPostUsers,
-    getUserPosts
-} = require('./chatUtils/users')
+import formatMessage = require('../helpers/formatMessages.helper')
+import { userJoin, getCurrentUser, userLeave, getRoomUsers, getUserRooms } from '../helpers/socket.users.helper'
 
 //Namespaces
 
@@ -17,7 +11,7 @@ const developerNamespace = io.of('/developer')
 const animalControlNamespace = io.of('/animalControl')
 const dbModerator = io.of('/dbModerator')
 
-exports.user = (socket) => {
+exports.user = (socket): void => {
     //Authorization
     io.use((socket, next) => {
         if(socket.request) {
@@ -29,13 +23,9 @@ exports.user = (socket) => {
 
     socket.on('joinPost', ({ username, post }) => {
         const user = userJoin(socket.id, username, post)
-
-        socket.to(user.post).emit('message', formatMessage(req.geoip, 'Live Chat, \n Connect with People'))
-
-        socket.broadcast.to(user.post).emit('message', formatMessage(req.geoip, `${user.username} has joined the chat`))
     })
 
-    socket.on('new-user', (post, name) => {
+    socket.on('new-user', (post, name): void => {
         socket.join(post)
         posts[post].users[socket.id] = name
         socket.to(post).broadcast.to('user-connected', name)
