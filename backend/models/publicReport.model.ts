@@ -1,6 +1,7 @@
-const mongoose = require('mongoose')
+import { createSchema, Type, typedModel } from 'ts-mongoose';
+ 
 
-const RequestSchema = mongoose.Schema({
+const PublicReport = createSchema({
     title: {
         type: String,
         required: true,
@@ -43,4 +44,4 @@ const RequestSchema = mongoose.Schema({
     timestamps: true,
 })
 
-module.exports = Report = mongoose.model('Report', ReportSchema)
+const PublicReport: Model<> = model('PublicReport', PublicReport)

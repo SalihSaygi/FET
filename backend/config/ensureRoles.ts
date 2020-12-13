@@ -1,19 +1,22 @@
-module.exports = {
-    ensureUser: function (req, res, next) {
+import { Request, Response, NextFunction } from "express"
+
+function ensureUser (req, res, next): Object {
       if (req.isAuthenticated()) {
         return next()
       } else {
         res.redirect('/')
       }
-    },
-    ensureGuest: function (req, res, next) {
+}
+
+function ensureGuest (req, res, next): Object{
       if (!req.isAuthenticated()) {
         return next();
       } else {
         res.redirect('/dashboard');
       }
-    },
-    ensureAdmin: function (req, res, next) {
+}
+
+function ensureAdmin (req, res, next): Object {
         if(req.body.role == 'admin') {
             return next()
         } else {

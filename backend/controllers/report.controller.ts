@@ -1,12 +1,11 @@
-const reportModule = require('../models/privateReport.model')
-const mongoose = require('mongoose')
-const bcrypt = require('bcrypt')
+import {PrivateReport} from '../models/privateReport.model'
 
 exports.createReport = (req, res) => {
 
     const report = new reportModule({
         title: req.body.title,
         animalType: req.body.animalType,
+        
         bounty: req.body.bounty,
         rateOfReport: req.body.rateOfReport,
         location: req.body.location,
@@ -38,8 +37,8 @@ exports.createReport = (req, res) => {
 }
 
 exports.findOneReport = (req, res) => {
-    Report.findById(req.query.reportId)
-        .then((report) => {
+    reportModule.findById(req.query.reportId)
+        .then((report): JSON => {
             if(!report) {
                 return res.status(404).json({
                     message: "Couldn't find the report with id: " + req.query.reportId,
@@ -51,7 +50,6 @@ exports.findOneReport = (req, res) => {
                 },
                     report
             )
-            console.log(user)
         })
         .catch((err) => {
             return res.status(500).json({
@@ -61,7 +59,7 @@ exports.findOneReport = (req, res) => {
 }
 
 exports.findAllReports = (req, res) => {
-    Report.find()
+    reportModule.find()
         .sort({ timestaps: -1 })
         .then((reports) => {
             res.status(200).json(reports)
@@ -74,7 +72,7 @@ exports.findAllReports = (req, res) => {
 }
 
 exports.deleteReport = (req, res) => {
-    Report.findByIdAndRemove(req.query.reportId)
+    reportModule.findByIdAndRemove(req.query.reportId)
         .then((report) => {
             if(!report) {
                 return res.status(404).json({
@@ -95,7 +93,7 @@ exports.deleteReport = (req, res) => {
 }
 
 exports.updateReport = (req, res) => {
-    Report.findByIdAndUpdate(req.query.reportId, req.body, { new: true})
+    reportModule.findByIdAndUpdate(req.query.reportId, req.body, { new: true})
         .then((report) => {
             if(!report) {
                 return res.status(404).json({
@@ -110,4 +108,3 @@ exports.updateReport = (req, res) => {
             )
         })
 }
-

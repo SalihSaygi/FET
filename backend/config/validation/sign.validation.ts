@@ -1,4 +1,4 @@
-const { check, validationResult } = require('express-validator/check')
+import { check, validationResult } from 'express-validator/check'
 
 exports.signUpValid = [
     

@@ -1,7 +1,7 @@
-const express = require('express')
+import express from 'express'
 const reportRouter = express.Router()
-const reportMethods = require('../../controllers/report.controller')
-const { ensureUser } = require('../../config/ensureRoles')
+import * as reportMethods from '../../controllers/report.controller'
+import { ensureUser } from '../../config/ensureRoles'
 
 reportRouter.get('/', ensureUser, reportMethods.findAllReports)
 reportRouter.post('/create', ensureUser, reportMethods.createReport)

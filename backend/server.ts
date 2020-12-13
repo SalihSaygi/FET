@@ -1,31 +1,29 @@
 //Server Config
-const express = require('express')
-const path = require('path')
-const http = require('http')
-const cors = require('cors')
-const morgan = require('morgan')
-const helmet = require('helmet')
-require('dotenv').config({ path: '../.env' })
-const URI = process.env.URI
-const passport = require('passport')
-const multer = require('multer')
-const gridFsStorage = require('multer-gridfs-storage')
-const pusher = require('pusher')
-const session = require('express-session')
-const googlePassport = require('./config/passport-google')
-const mongoose = require('mongoose')
-const RedisClient = require('ioredis')
-const RedisStore = require('rate-limit-redis')(session)
-const {REDIS_OPTIONS, SESSION_OPTIONS} = require('./config/redis')
-const grid = require('gridfs-stream')
-const socketioJwt = require('socketio-jwt')
+import express, { json, urlencoded } from 'express'
+import { extname } from 'path'
+import { createServer } from 'http'
+import cors from 'cors'
+import morgan from 'morgan'
+import helmet from 'helmet'
+const dotenv = require('dotenv').config({ path: '../.env' })
+import { authenticate, initialize, session as _session } from 'passport'
+import multer from 'multer'
+import gridFsStorage from 'multer-gridfs-storage'
+import pusher from 'pusher'
+import session from 'express-session'
+// import googlePassport from './config/passport-google'
+import { mongo, createConnection } from 'mongoose'
+import RedisClient from 'ioredis'
+const RedisStore = require('connect-redis')(session)
+import { REDIS_OPTIONS, SESSION_OPTIONS } from './config/redis'
+import grid from 'gridfs-stream'
 
 const app = express()
-const server = http.createServer(app)
+const server = createServer(app)
 const io = require('socket.io').listen(server);
 //Server Config
-app.use(express.json())
-app.use(express.urlencoded({ extended: false }))
+app.use(json())
+app.use(urlencoded({ extended: false }))
 app.use(cors({
     origin: process.env.ORIGIN_URL
 }))
@@ -34,9 +32,9 @@ app.use(morgan('common'))
 
 app.enable('trust proxy', 1)
 
-const RateLimit = require('express-rate-limit')
-const SlowDown = require("express-slow-down")
-const {RateLimiterMemory, BurstyRateLimiter} = require('rate-limiter-flexible')
+import RateLimit from 'express-rate-limit'
+import SlowDown from "express-slow-down"
+import { RateLimiterMemory, BurstyRateLimiter } from 'rate-limiter-flexible'
 
 const clientLimit = new RedisClient({ REDIS_OPTIONS })
 const clientSpeed = new RedisClient({ REDIS_OPTIONS })
@@ -102,12 +100,12 @@ app.use(newPusher)
 
 //Routes
 
-const { ensureUser, ensureGuest, ensureAdmin } = require('./config/ensureRoles')
+import { ensureUser, ensureGuest, ensureAdmin } from './config/ensureRoles'
 
-const adminDashboardRouter = require('./routes/admin/userAdmin.route')
-const googleAuthRouter = require('./routes/general/googleAuth.router')
-const userMethods = require('./controllers/user.controller')
-const reportRoute = require('./routes/general/report.route')
+import adminDashboardRouter from './routes/admin/userAdmin.route'
+import googleAuthRouter from './routes/general/googleAuth.router'
+import { createUser } from './controllers/user.controller'
+import reportRoute from './routes/general/report.route'
 
 app.use('/report', ensureUser, reportRoute)
 
@@ -119,7 +117,7 @@ app.use('/auth', googleAuthRouter)
 
 app.post('/login', 
     ensureGuest, 
-    passport.authenticate(['local', 'passport-google-oauth']),
+    authenticate(['local', 'passport-google-oauth']),
         function(req, res) {
         // If this function gets called, authentication was successful.
         // `req.user` contains the authenticated user.
@@ -131,19 +129,18 @@ app.get('/logout', ensureUser, function(req, res){
     res.redirect('/')
 })
 
-app.post('/register', ensureGuest, userMethods.createUser)
+app.post('/register', ensureGuest, createUser)
 
 //Location Middleware
-const location = require('./helpers/location.helper')
+import location from './helpers/location.helper'
 app.use(location)
 
 //SocketIO
 io.use(wrap(session({ secret: "cats" })));
 
 io.sockets
-    .on('connection', socketioJwt.authorize ({
-        secret: 'your secret or public key',
-        timeout: 5000
+    .on('connection', ({
+
     }))
     .on('authenticated', (socket) => {
         require('./config/chat.socket')(socket)
@@ -154,7 +151,7 @@ io.sockets
 
 grid.mongo = mongoose.mongo
 
-const storageCon = mongoose.createConnection(URI, {
+const storageCon = createConnection(URI, {
     useCreateIndex: true,
     useNewUrlParser: true,
     useUnifiedTopology: true
@@ -163,7 +160,7 @@ const storageCon = mongoose.createConnection(URI, {
 storageCon.once('open', () => {
     console.log('Storage Database connection has been established succesfully')
 
-    gfs = grid(storageCon.db, mongoose.mongo)
+    gfs = grid(storageCon.db, mongo)
     gfs.collection('images')
     gfs.collection('videos')
 })
@@ -175,7 +172,7 @@ const storage = new gridFsStorage({
     file: (req, file) => {
         return new Promise((resolve, reject) => {{
             const fileType = file.type
-            const filename = `${fileType}-${Data.now()}${path.extname(file.originalName)}`
+            const filename = `${fileType}-${Data.now()}${extname(file.originalName)}`
             
             const fileInfo={
                 filename: filename,
@@ -194,10 +191,10 @@ app.post('/upload/file', upload.single('file'), (req, res) => {
     res.status(201).send(req.file)
 })
 
-app.use(passport.initialize())
-app.use(passport.session())
+app.use(initialize())
+app.use(_session())
 
-const { notFound, errorHandler } = require('./helpers/middlewares.helpers')
+import { notFound, errorHandler } from './helpers/middlewares.helpers'
 
 app.use(notFound);
 app.use(errorHandler);

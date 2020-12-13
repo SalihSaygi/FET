@@ -1,9 +1,9 @@
-const mongoose = require('mongoose')
-const bcrypt = require('bcrypt')
+import mongoose = require('mongoose')
+import bcrypt = require('bcrypt')
 
 const opts = { toJSON: { virtuals: true } }
 
-const UserSchema = mongoose.Schema({
+const UserSchema = new mongoose.Schema({
     nickname: {
         type: String,
         required: true,
@@ -50,8 +50,8 @@ const UserSchema = mongoose.Schema({
         required: true,
         enum: [
             'Newbie',
-            'Animal Lover', 
-            'Finder of the Losts', 
+            'Animal Lover',
+            'Finder of the Losts',
             'Animal Detective',
         ]
     },
@@ -68,7 +68,7 @@ const UserSchema = mongoose.Schema({
         maxlength: 2,
     },
     numberOfFindings: {
-        type: Number, 
+        type: Number,
         required: true,
     },
     profilePhoto: {
@@ -76,7 +76,7 @@ const UserSchema = mongoose.Schema({
         contentType: String
     },
     reports: [{
-        type: mongoose.Schema.Types.ObjectId, 
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'Report'
     }],
     age: {
@@ -93,7 +93,7 @@ const UserSchema = mongoose.Schema({
         type: String,
         required: false
     },
-    }, {
+}, {
     timestamps: true,
 }, opts)
 
@@ -102,24 +102,21 @@ UserSchema.virtual('fullName').
   set(function(v) {
     const firstName = v.substring(0, v.indexOf(' '));
     const lastName = v.substring(v.indexOf(' ') + 1);
-    opts.toJSON().fullname
-    JSON.stringify(opts)
-    this.set({ firstName, lastName });
 })
 
 UserSchema.pre('save', function(next){
     if(!this.isModified('password')) return next()
     bcrypt.genSalt(10, (err, salt) => {
         if(err) return next(err)
-        bcrypt.hash(user.password, salt, (err, hash) => {
+        bcrypt.hash(User.password, salt, (err, hash) => {
             if(err) return next(err)
-            user.password = hash
+            User.password = hash
             next()
         })
     })
 })
 
-UserSchema.methods.comparePassword = function comparePassword(candidatePassword, cb) {
+UserSchema.methods.comparePassword = function comparePassword(candidatePassword, cb): void {
     bcrypt.compare(candidatePassword, this.password, (err, isMatch) => {
       cb(err, isMatch);
     });

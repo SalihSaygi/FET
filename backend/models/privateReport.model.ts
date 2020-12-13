@@ -1,6 +1,17 @@
-const mongoose = require('mongoose')
+import mongoose, { Schema, Document } from 'mongoose'
 
-const PrivateReportSchema = mongoose.Schema({
+export interface IPrivateReport extends Document {
+    title: string
+    animalType: string
+    animalRace: string
+    location: string
+    latitude: number
+    longtitude: number
+    explanation: string
+    imageOrVideo: 
+}
+
+let PrivateReport: Schema = new Schema({
     title: {
         type: String,
         required: true,
@@ -46,10 +57,10 @@ const PrivateReportSchema = mongoose.Schema({
     forWho: {
         type: mongoose.Schema.ObjectId, ref: 'User'
     },
-    reportedBy: {type: mongoose.Schema.Types.ObjectId, ref: 'User'}
-}, 
+    reportedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
+},
     {
-    timestamps: true,
-})
+        timestamps: true,
+    })
 
-module.exports = Report = mongoose.model('PrivateReport', PrivateReportSchema)
+exports.module = PrivateReport = mongoose.model('PrivateReport', PrivateReportSchema)

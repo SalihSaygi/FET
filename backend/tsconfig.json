@@ -2,6 +2,7 @@
     "compilerOptions": {
       "declaration": true,
       "emitDeclarationOnly": true,
+      "esModuleInterop": true,
       "isolatedModules": true,
       "outDir": "./built",
       "allowJs": true,

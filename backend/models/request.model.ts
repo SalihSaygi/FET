@@ -1,6 +1,6 @@
-const mongoose = require('mongoose')
+import mongoose from 'mongoose'
 
-const RequestSchema = mongoose.Schema({
+const RequestSchema = new mongoose.Schema({
     title: {
         type: String,
         required: true,
@@ -57,4 +57,4 @@ const RequestSchema = mongoose.Schema({
     timestamps: true,
 })
 
-module.exports = Report = mongoose.model('Report', ReportSchema)
+exports.module = Request = mongoose.model('Request', RequestSchema)
