@@ -1,11 +1,11 @@
 import { useLayoutEffect, useState } from 'react';
 
-export default function useWindowPosition(id) {
+export default function useWindowPosition(id: string): boolean {
   const [animation, setAnimation] = useState(false);
 
-  useLayoutEffect(() => {
-    function updatePosition() {
-      const offetSetHeight = window.document.getElementById(id).offsetHeight;
+  useLayoutEffect((): () => void => {
+    function updatePosition(): void {
+      const offetSetHeight = window.document.getElementById(id)!.offsetHeight;
       if (window.pageYOffset > offetSetHeight * 0.7) {
         setAnimation(true);
       }

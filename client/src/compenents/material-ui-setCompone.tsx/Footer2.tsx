@@ -1,5 +1,5 @@
 import React from 'react';
-import '../../sources/css/Footer2';
+import '../../sources/css/Footer2.css';
 import { Button } from './SpecialButton';
 import { Link } from 'react-router-dom';
 

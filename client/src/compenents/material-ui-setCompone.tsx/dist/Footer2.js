@@ -1,7 +1,7 @@
 "use strict";
 exports.__esModule = true;
 var react_1 = require("react");
-require("../../sources/css/Footer2");
+require("../../sources/css/Footer2.css");
 var SpecialButton_1 = require("./SpecialButton");
 var react_router_dom_1 = require("react-router-dom");
 function Footer() {

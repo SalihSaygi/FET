@@ -72,7 +72,7 @@ export default function Header(): JSX.Element {
             Let's Find Your <br />
             My<span className={classes.colorText}>Pet.</span>
           </h1>
-          <Scroll to="place-to-visit" smooth={true}>
+          <Scroll to="options" smooth={true}>
             <IconButton>
               <ExpandMoreIcon className={classes.goDown} />
             </IconButton>

@@ -75,7 +75,7 @@ function Header() {
                     react_1["default"].createElement("br", null),
                     "My",
                     react_1["default"].createElement("span", { className: classes.colorText }, "Pet.")),
-                react_1["default"].createElement(react_scroll_1.Link, { to: "place-to-visit", smooth: true },
+                react_1["default"].createElement(react_scroll_1.Link, { to: "options", smooth: true },
                     react_1["default"].createElement(core_1.IconButton, null,
                         react_1["default"].createElement(ExpandMore_1["default"], { className: classes.goDown })))))));
 }

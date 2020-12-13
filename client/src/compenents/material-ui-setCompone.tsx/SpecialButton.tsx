@@ -1,5 +1,5 @@
 import React from 'react';
-import '../../sources/css/specialButton';
+import '../../sources/css/specialButton.css';
 import { Link } from 'react-router-dom';
 
 const STYLES = ['btn--primary', 'btn--outline', 'btn--test'];

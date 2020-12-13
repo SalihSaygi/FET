@@ -5,6 +5,7 @@ var styles_1 = require("@material-ui/core/styles");
 var core_1 = require("@material-ui/core");
 var Header_1 = require("./Header");
 var CardsDIV_1 = require("./CardsDIV");
+var Footer2_1 = require("../material-ui-setCompone.tsx/Footer2");
 var useStyles = styles_1.makeStyles(function (theme) { return ({
     root: {
         minHeight: '100vh',
@@ -18,6 +19,7 @@ function LandingPage() {
     return (react_1["default"].createElement("div", { className: classes.root },
         react_1["default"].createElement(core_1.CssBaseline, null),
         react_1["default"].createElement(Header_1["default"], null),
-        react_1["default"].createElement(CardsDIV_1["default"], null)));
+        react_1["default"].createElement(CardsDIV_1["default"], null),
+        react_1["default"].createElement(Footer2_1["default"], null)));
 }
 exports["default"] = LandingPage;

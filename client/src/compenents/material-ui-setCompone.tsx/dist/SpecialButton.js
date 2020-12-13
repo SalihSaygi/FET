@@ -2,7 +2,7 @@
 exports.__esModule = true;
 exports.Button = void 0;
 var react_1 = require("react");
-require("../../sources/css/specialButton");
+require("../../sources/css/specialButton.css");
 var react_router_dom_1 = require("react-router-dom");
 var STYLES = ['btn--primary', 'btn--outline', 'btn--test'];
 var SIZES = ['btn--medium', 'btn--large'];

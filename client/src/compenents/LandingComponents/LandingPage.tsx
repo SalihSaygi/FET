@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { CssBaseline } from '@material-ui/core';
 import Header from './Header';
 import Cards from './CardsDIV';
+import Footer from '../material-ui-setCompone.tsx/Footer2'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -19,6 +20,7 @@ export default function LandingPage() {
       <CssBaseline />
       <Header />
       <Cards />
+      <Footer/>
     </div>
   );
 }
