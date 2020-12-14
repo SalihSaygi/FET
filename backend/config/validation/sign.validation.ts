@@ -1,4 +1,5 @@
 import { check, validationResult } from 'express-validator/check'
+import { Request, Response, NextFunction } from 'express'
 
 exports.signUpValid = [
     
@@ -14,22 +15,23 @@ exports.signUpValid = [
     .isEmail()
     .withMessage('Must be a valid email address'),
     
-    check('phoneNumber').isMobilePhone(),
-    (req, res, next) => {
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(422).json({ errors: errors.array() });
-        }
-        else next();
-    },
-
     check('password', 'password is required').notEmpty(),
     check('password').isLength({
         min: 8
     })
     .withMessage('Password must contain at least 8 characters')
     .matches(/\d/)
-    .withMessage('password must contain a number')
+    .withMessage('password must contain a number'),
+
+    check('phoneNumber')
+    .isMobilePhone(),
+    (req: Request, res: Response, next: NextFunction) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(422).json({ errors: errors.array() });
+        }
+        else next();
+    }
 ]
 
 exports.validLogin = [

@@ -12,7 +12,15 @@ exports.signUpValid = [
     check_1.check('email')
         .isEmail()
         .withMessage('Must be a valid email address'),
-    check_1.check('phoneNumber').isMobilePhone(),
+    check_1.check('password', 'password is required').notEmpty(),
+    check_1.check('password').isLength({
+        min: 8
+    })
+        .withMessage('Password must contain at least 8 characters')
+        .matches(/\d/)
+        .withMessage('password must contain a number'),
+    check_1.check('phoneNumber')
+        .isMobilePhone(),
     function (req, res, next) {
         var errors = check_1.validationResult(req);
         if (!errors.isEmpty()) {
@@ -20,14 +28,7 @@ exports.signUpValid = [
         }
         else
             next();
-    },
-    check_1.check('password', 'password is required').notEmpty(),
-    check_1.check('password').isLength({
-        min: 8
-    })
-        .withMessage('Password must contain at least 8 characters')
-        .matches(/\d/)
-        .withMessage('password must contain a number')
+    }
 ];
 exports.validLogin = [
     check_1.check('email')

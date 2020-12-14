@@ -101,7 +101,7 @@ app.use(express_session_1.default(__assign(__assign({}, redis_1.SESSION_OPTIONS)
         //lasts 1 day
         maxAge: 24 * 60 * 60 * 1000
     } })));
-var port = process.env.PORT || 3000;
+var port = process.env.PORT;
 var newPusher = new pusher_1.default({
     appId: "1100018",
     key: "f4284b71efae2bd5907f",

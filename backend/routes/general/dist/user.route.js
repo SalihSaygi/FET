@@ -1,0 +1,10 @@
+"use strict";
+exports.__esModule = true;
+var express = require('express');
+var userRoute = express.Router();
+var userMethods = require('../../controllers/user.controller');
+var ensureUser = require('../../config/ensureRoles').ensureUser;
+userRoute.get('/:userId', ensureUser, userMethods.findOneUser);
+userRoute.put('/:userId/edit', ensureUser, userMethods.updateUser);
+userRoute["delete"]('/:userId', ensureUser, userMethods.deleteUser);
+module.exports = userRoute;

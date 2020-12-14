@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState} from 'react'
+import React, { ReactNode, useContext, useEffect, useState} from 'react'
 import io from 'socket.io-client'
 import axios from 'axios'
 
@@ -7,27 +7,28 @@ const api = axios.create({
     responseType: 'json'
 })
 
-const SocketIOContext = React.createContext()
+const SocketIOContext = React.createContext(null)
 
 export function useSocket() {
     return useContext(SocketIOContext)
 }
 
-export function SocketIOProvider({name, children}) {
+interface Props {
+    name: string,
+    children: ReactNode
+}
+
+export const SocketIOProvider: React.FC<Props> = ({}) => {
     const [socket, setSocket] = useState()
     const [id, setId] = useState()
 
     useEffect(() => {
         
-        api
-        .get('/:id')
-        .then(res => res.user._id)
+        api.get('/:id')
+        .then(res => res.data.user._id)
         
-
-        
-
         const newSocket = io(
-            'http://localhost:5000',
+            'http://localhost:3050',
             { query: { id } }
         )
 

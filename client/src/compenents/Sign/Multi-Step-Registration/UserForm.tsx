@@ -11,6 +11,9 @@ import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 
+import { UserContext } from "../UserContext";
+// import { login } from "../utils/login";
+
 const styles = theme => ({
   root: {
     width: '100%',
@@ -102,7 +105,6 @@ class Register extends Component {
       case 4:
         return <Success />;
       default:
-        (console.log('This is a multi-step form built with React.'))
         return 'Unknown Index'
     }
   }
