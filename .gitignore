@@ -19,6 +19,9 @@
 .env.production.local
 .env
 data
+.vscode
+debug.log
+lib
 -p
 .github
 .vscode
