@@ -20,6 +20,8 @@
 .env
 data
 .vscode
+/dist
+dist/
 debug.log
 lib
 -p
