@@ -1,26 +1,30 @@
 "use strict";
 exports.__esModule = true;
-function ensureUser(req, res, next) {
-    if (req.isAuthenticated()) {
-        return next();
+exports.ensureAdmin = exports.ensureGuest = exports.ensureUser = void 0;
+function ensureUser(args) {
+    if (args.req.isAuthenticated()) {
+        return args.next();
     }
     else {
-        res.redirect('/');
+        args.res.redirect('/');
     }
 }
-function ensureGuest(req, res, next) {
-    if (!req.isAuthenticated()) {
-        return next();
+exports.ensureUser = ensureUser;
+function ensureGuest(args) {
+    if (!args.req.isAuthenticated()) {
+        return args.next();
     }
     else {
-        res.redirect('/dashboard');
+        args.res.redirect('/dashboard');
     }
 }
-function ensureAdmin(req, res, next) {
-    if (req.body.role == 'admin') {
-        return next();
+exports.ensureGuest = ensureGuest;
+function ensureAdmin(args) {
+    if (args.req.body.role == 'admin') {
+        return args.next();
     }
     else {
-        res.redirect('/admin-dashboard');
+        args.res.status(401).json({ error: 'Unauthorized Access Attempt has been blocked.' }).redirect('/401');
     }
 }
+exports.ensureAdmin = ensureAdmin;

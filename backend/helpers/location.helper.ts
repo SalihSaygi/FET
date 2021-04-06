@@ -1,3 +1,6 @@
+//don't remove, fixed line 6 "[ts] Cannot redeclare block-scoped variable 'name'" error for unknown reasons
+export {};
+
 const where = require('node-where')
 
 const location = (req, res, next) => {

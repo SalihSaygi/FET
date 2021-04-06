@@ -6,7 +6,9 @@
       "isolatedModules": true,
       "outDir": "./built",
       "allowJs": true,
-      "target": "es5"
+      "sourceMap": true,
+      "target": "es5",
+      "module": "commonjs"
     },
     "include": ["../backend/**/*"]
   }

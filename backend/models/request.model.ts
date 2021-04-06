@@ -56,5 +56,4 @@ const RequestSchema = new mongoose.Schema({
     {
     timestamps: true,
 })
-
-exports.module = Request = mongoose.model('Request', RequestSchema)
+export const Request = mongoose.model('Request', RequestSchema)

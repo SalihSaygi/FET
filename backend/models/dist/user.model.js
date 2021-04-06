@@ -1,9 +1,10 @@
 "use strict";
 exports.__esModule = true;
-var mongoose = require("mongoose");
-var bcrypt = require("bcrypt");
-var opts = { toJSON: { virtuals: true } };
-var UserSchema = new mongoose.Schema({
+exports.User = void 0;
+var mongoose_1 = require("mongoose");
+var bcrypt_1 = require("bcrypt");
+mongoose.set('toJSON', { virtuals: true });
+var UserSchema = new mongoose_1.Schema({
     nickname: {
         type: String,
         required: true,
@@ -77,7 +78,7 @@ var UserSchema = new mongoose.Schema({
     },
     reports: [{
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'Report'
+            ref: 'PublicReport'
         }],
     age: {
         type: Number,
@@ -95,7 +96,7 @@ var UserSchema = new mongoose.Schema({
     }
 }, {
     timestamps: true
-}, opts);
+});
 UserSchema.virtual('fullName').
     get(function () { return this.firstName + " " + this.lastName; }).
     set(function (v) {
@@ -105,20 +106,20 @@ UserSchema.virtual('fullName').
 UserSchema.pre('save', function (next) {
     if (!this.isModified('password'))
         return next();
-    bcrypt.genSalt(10, function (err, salt) {
+    bcrypt_1["default"].genSalt(10, function (err, salt) {
         if (err)
             return next(err);
-        bcrypt.hash(User.password, salt, function (err, hash) {
+        bcrypt_1["default"].hash(UserSchema.password, salt, function (err, hash) {
             if (err)
                 return next(err);
-            User.password = hash;
+            UserSchema.password = hash;
             next();
         });
     });
 });
 UserSchema.methods.comparePassword = function comparePassword(candidatePassword, cb) {
-    bcrypt.compare(candidatePassword, this.password, function (err, isMatch) {
+    bcrypt_1["default"].compare(candidatePassword, this.password, function (err, isMatch) {
         cb(err, isMatch);
     });
 };
-var User = mongoose.model('User', UserSchema);
+exports.User = mongoose.model('User', UserSchema);

@@ -197,7 +197,7 @@ app.post('/upload/file', upload.single('file'), (req, res) => {
 app.use(passport.initialize())
 app.use(passport.session())
 
-const { notFound, errorHandler } from './helpers/middlewares.helpers'
+import { notFound, errorHandler } from './helpers/middlewares.helpers'
 
 app.use(notFound);
 app.use(errorHandler);

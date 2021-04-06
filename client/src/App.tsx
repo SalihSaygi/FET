@@ -9,7 +9,7 @@ import AdminDashboard from './compenents/AdminDashboard'
 import MessageComp from './compenents/Message/MessageComp'
 import MapPage from './compenents/MapPage'
 import RequestForm from './compenents/CRUDs/Requests/RequestCreate'
-import {ContentPage} from './compenents/ContentPage'
+import {ContentPage} from './compenents/landingPage/ContentPage'
 import ErrorPage from './compenents/ErrorPage'
 
 const App: React.FC = () => {

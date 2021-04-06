@@ -9,4 +9,4 @@ reportRouter.get('/results', ensureUser, reportMethods.findOneReport)
 reportRouter.put('/', ensureUser, reportMethods.updateReport)
 reportRouter.delete('/:reportId', ensureUser, reportMethods.deleteReport)
 
-module.exports = reportRouter
+export default reportRouter

@@ -36,10 +36,11 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
+exports.googlePassport = void 0;
 var GoogleStrategy = require('passport-google-oauth20').Strategy;
 var User = require("../models/user.model");
 require('dotenv').config({ path: '.env' });
-module.exports = function (passport) {
+exports.googlePassport = function (passport) {
     passport.use(new GoogleStrategy({
         clientID: process.env.GOOGLE_CLIENT_ID,
         clientSecret: process.env.GOOGLE_CLIENT_SECRET,

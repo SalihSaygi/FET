@@ -1,7 +1,7 @@
 "use strict";
 exports.__esModule = true;
 var mongoose_1 = require("mongoose");
-var PrivateReport = new mongoose_1.Schema({
+var PrivateReportSchema = new mongoose_1.Schema({
     title: {
         type: String,
         required: true,
@@ -51,4 +51,5 @@ var PrivateReport = new mongoose_1.Schema({
 }, {
     timestamps: true
 });
-exports.module = PrivateReport = mongoose_1["default"].model('PrivateReport', PrivateReportSchema);
+var PrivateReport = mongoose_1["default"].model('PrivateReport', PrivateReportSchema);
+exports["default"] = PrivateReport;

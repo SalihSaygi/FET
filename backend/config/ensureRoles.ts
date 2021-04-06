@@ -1,26 +1,31 @@
 import { Request, Response, NextFunction } from "express"
 
-function ensureUser (req, res, next): Object {
-      if (req.isAuthenticated()) {
-        return next()
+interface Params {
+  req: Request,
+  res: Response,
+  next: NextFunction
+}
+
+export function ensureUser(args: Params): void {
+      if (args.req.isAuthenticated()) {
+        return args.next()
       } else {
-        res.redirect('/')
+        args.res.redirect('/')
       }
 }
 
-function ensureGuest (req, res, next): Object{
-      if (!req.isAuthenticated()) {
-        return next();
+export function ensureGuest (args: Params): void{
+      if (!args.req.isAuthenticated()) {
+        return args.next();
       } else {
-        res.redirect('/dashboard');
+        args.res.redirect('/dashboard')
       }
 }
 
-function ensureAdmin (req, res, next): Object {
-        if(req.body.role == 'admin') {
-            return next()
+export function ensureAdmin (args: Params): void {
+        if(args.req.body.role == 'admin') {
+            return args.next()
         } else {
-            res.redirect('/admin-dashboard');
+            args.res.status(401).json({ error: 'Unauthorized Access Attempt has been blocked.' }).redirect('/401')
         }
-    }
 }

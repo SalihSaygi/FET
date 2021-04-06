@@ -2,11 +2,11 @@
 exports.__esModule = true;
 var express_1 = require("express");
 var reportRouter = express_1["default"].Router();
-var report_controller_1 = require("../../controllers/report.controller");
+var reportMethods = require("../../controllers/report.controller");
 var ensureRoles_1 = require("../../config/ensureRoles");
-reportRouter.get('/', ensureRoles_1.ensureUser, report_controller_1["default"].findAllReports);
-reportRouter.post('/create', ensureRoles_1.ensureUser, report_controller_1["default"].createReport);
-reportRouter.get('/results', ensureRoles_1.ensureUser, report_controller_1["default"].findOneReport);
-reportRouter.put('/', ensureRoles_1.ensureUser, report_controller_1["default"].updateReport);
-reportRouter["delete"]('/:reportId', ensureRoles_1.ensureUser, report_controller_1["default"].deleteReport);
-module.exports = reportRouter;
+reportRouter.get('/', ensureRoles_1.ensureUser, reportMethods.findAllReports);
+reportRouter.post('/create', ensureRoles_1.ensureUser, reportMethods.createReport);
+reportRouter.get('/results', ensureRoles_1.ensureUser, reportMethods.findOneReport);
+reportRouter.put('/', ensureRoles_1.ensureUser, reportMethods.updateReport);
+reportRouter["delete"]('/:reportId', ensureRoles_1.ensureUser, reportMethods.deleteReport);
+exports["default"] = reportRouter;

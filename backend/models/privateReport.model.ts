@@ -8,10 +8,10 @@ export interface IPrivateReport extends Document {
     latitude: number
     longtitude: number
     explanation: string
-    imageOrVideo: 
+    imageOrVideo: Buffer
 }
 
-let PrivateReport: Schema = new Schema({
+const PrivateReportSchema: Schema = new Schema({
     title: {
         type: String,
         required: true,
@@ -63,4 +63,6 @@ let PrivateReport: Schema = new Schema({
         timestamps: true,
     })
 
-exports.module = PrivateReport = mongoose.model('PrivateReport', PrivateReportSchema)
+const PrivateReport = mongoose.model('PrivateReport', PrivateReportSchema)
+
+export default PrivateReport

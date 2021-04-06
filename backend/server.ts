@@ -30,15 +30,13 @@ app.use(cors({
 app.use(helmet())
 app.use(morgan('common'))
 
-app.enable('trust proxy', 1)
+app.enable('trust proxy')
 
 import RateLimit from 'express-rate-limit'
 import SlowDown from "express-slow-down"
 import { RateLimiterMemory, BurstyRateLimiter } from 'rate-limiter-flexible'
 
-const clientLimit = new RedisClient({ REDIS_OPTIONS })
-const clientSpeed = new RedisClient({ REDIS_OPTIONS })
-
+const clientLimit, clientSpeed = new RedisClient({ REDIS_OPTIONS })
 const limiter = new RateLimit({
     store: new RedisStore({
       clientLimit
@@ -172,7 +170,7 @@ const storage = new gridFsStorage({
     file: (req, file) => {
         return new Promise((resolve, reject) => {{
             const fileType = file.type
-            const filename = `${fileType}-${Data.now()}${extname(file.originalName)}`
+            const filename = `${fileType}-${Date.now()}${extname(file.originalName)}`
             
             const fileInfo={
                 filename: filename,

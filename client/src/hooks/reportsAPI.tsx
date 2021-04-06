@@ -4,12 +4,12 @@ export default {
             return fetch('/reports')
                     .then(res => res.json())
         },
-        getOneReport: (_id) => {
+        getOneReport: (id) => {
             return fetch(`/reports?q=${encodeURIComponent(_id)}`,
                         { method : 'GET'}
                         .then(res => res.json))
         },
-        deleteReport : (_id)=>{
+        deleteReport : (id)=>{
             return fetch(`/reports?q=${encodeURIComponent(_id)}`,
                         {method : 'DELETE'})
                         .then(res => res.json())

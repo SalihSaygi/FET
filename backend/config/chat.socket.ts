@@ -1,5 +1,5 @@
-import io = require('socket.io')
-
+import ioImport = require('socket.io')
+import io = ioImport(server)
 import formatMessage = require('../helpers/formatMessages.helper')
 import { userJoin, getCurrentUser, userLeave, getRoomUsers, getUserRooms } from '../helpers/socket.users.helper'
 

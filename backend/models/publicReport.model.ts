@@ -1,7 +1,16 @@
-import { createSchema, Type, typedModel } from 'ts-mongoose';
+import { Document, model, Schema, Model, Types } from 'mongoose';
  
+interface IPublicReport extends Document {
+    title: string;
+    animalType: number;
+    location: string;
+    extraInfo: string;
+    imageOrVideo: Buffer;
+    updatedAt: Date;
+    comments: Types.ObjectId[];
+}
 
-const PublicReport = createSchema({
+const PublicReportSchema: Schema = new Schema({
     title: {
         type: String,
         required: true,
@@ -34,7 +43,7 @@ const PublicReport = createSchema({
         type: Date, default: Date.now
     },
     comments: [{
-        type: mongoose.Schema.Types.ObjectId, ref: 'Comment',
+        type: Schema.Types.ObjectId, ref: 'Comment',
     }],
     likes: {
         type: Number
@@ -44,4 +53,4 @@ const PublicReport = createSchema({
     timestamps: true,
 })
 
-const PublicReport: Model<> = model('PublicReport', PublicReport)
+export const PublicReport: Model<IPublicReport> = model('PublicReport', PublicReportSchema)

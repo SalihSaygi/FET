@@ -1,6 +1,6 @@
 
-const express = require('express')
-const passport = require('passport')
+import express from 'express'
+import passport from 'passport'
 const googleRouter = express.Router()
 
 // @desc    Auth with Google
@@ -24,4 +24,4 @@ googleRouter.get('/logout', (req, res) => {
   res.redirect('/')
 })
 
-module.exports = googleRouter
+export default googleRouter

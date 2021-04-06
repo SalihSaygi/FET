@@ -1,9 +1,10 @@
-const User = require('../models/user.model')
-const googlePassport = require('../config/passport-google')
-const bcrypt = require('bcrypt')
-const { sessionizeUser } = require('../helpers/middlewares.helpers')
+import {User} from '../models/user.model'
+import {googlePassport} from '../config/passport-google'
+import bcrypt from 'bcrypt'
+import crypto from 'crypto'
+import { sessionizeUser } from '../helpers/middlewares.helpers'
 
-exports.createUser = (req, res) => {
+export const createUser = (req, res) => {
 
     const saltHash = genPassword(req.body.password)
     const salt = saltHash.salt;
@@ -52,7 +53,7 @@ exports.createUser = (req, res) => {
 //Read METHODS
 
 //Finding an user with id
-exports.findOneUser = (req, res) => {
+export const findOneUser = (req, res) => {
     User.findById(req.params.userId)
         .then((user) => {
             if(!user) {
@@ -75,7 +76,7 @@ exports.findOneUser = (req, res) => {
         })
 }
 
-exports.findAllUsers = (req, res) => {
+export const findAllUsers = (req, res) => {
     User.find()
         .sort({ name: -1 })
         .then((users) => {
@@ -97,7 +98,7 @@ exports.findAllUsers = (req, res) => {
 
 //Delete METHODS
 
-exports.deleteUser = (req, res) => {
+export const deleteUser = (req, res) => {
     User.findByIdAndRemove(req.params.userId)
         .then((user) => {
             if(!user) {
@@ -119,7 +120,7 @@ exports.deleteUser = (req, res) => {
         })
 }
 
-exports.updateUser = (req, res) => {
+export const updateUser = (req, res) => {
     if(!req.body.email || !req.body.password || !req.body.name) {
         return res.status(400).json({
             message: "Fill in the required fields"

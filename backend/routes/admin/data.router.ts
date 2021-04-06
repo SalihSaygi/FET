@@ -1,9 +1,9 @@
-const express = require('express')
+import express from 'express'
 const dataRouter = express.Router()
 
-const userAdminRouter = require('./userAdmin.route')
-const reportRouter = require('./report.route')
-const { ensureAdmin } = require('../../config/auth')
+import userAdminRouter from './userAdmin.route'
+import reportRouter from './report.route'
+import { ensureAdmin } from '../../config/auth'
 
 dataRouter.use('/', ensureAdmin, (req, res) => {
      res.redirect('/users');
@@ -11,4 +11,4 @@ dataRouter.use('/', ensureAdmin, (req, res) => {
 dataRouter.use('/users', ensureAdmin, userAdminRouter)
 dataRouter.use('/reports', ensureAdmin, reportRouter)
 
-module.exports = dataRouter
+export default dataRouter

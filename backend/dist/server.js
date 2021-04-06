@@ -63,12 +63,11 @@ app.use(cors_1.default({
 }));
 app.use(helmet_1.default());
 app.use(morgan_1.default('common'));
-app.enable('trust proxy', 1);
+app.enable('trust proxy');
 var express_rate_limit_1 = __importDefault(require("express-rate-limit"));
 var express_slow_down_1 = __importDefault(require("express-slow-down"));
 var rate_limiter_flexible_1 = require("rate-limiter-flexible");
-var clientLimit = new ioredis_1.default({ REDIS_OPTIONS: redis_1.REDIS_OPTIONS });
-var clientSpeed = new ioredis_1.default({ REDIS_OPTIONS: redis_1.REDIS_OPTIONS });
+var clientLimit, clientSpeed = new ioredis_1.default({ REDIS_OPTIONS: redis_1.REDIS_OPTIONS });
 var limiter = new express_rate_limit_1.default({
     store: new RedisStore({
         clientLimit: clientLimit
@@ -163,7 +162,7 @@ var storage = new multer_gridfs_storage_1.default({
         return new Promise(function (resolve, reject) {
             {
                 var fileType = file.type;
-                var filename = fileType + "-" + Data.now() + path_1.extname(file.originalName);
+                var filename = fileType + "-" + Date.now() + path_1.extname(file.originalName);
                 var fileInfo = {
                     filename: filename,
                     bucketName: 'sources'

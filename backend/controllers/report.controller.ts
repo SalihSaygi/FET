@@ -1,11 +1,10 @@
-import {PrivateReport} from '../models/privateReport.model'
+import PrivateReport from '../models/privateReport.model'
 
-exports.createReport = (req, res) => {
+export const createReport = (req, res) => {
 
     const report = new reportModule({
         title: req.body.title,
-        animalType: req.body.animalType,
-        
+        animalType: req.body.animalType,   
         bounty: req.body.bounty,
         rateOfReport: req.body.rateOfReport,
         location: req.body.location,
@@ -36,7 +35,7 @@ exports.createReport = (req, res) => {
 
 }
 
-exports.findOneReport = (req, res) => {
+export const findOneReport = (req, res) => {
     reportModule.findById(req.query.reportId)
         .then((report): JSON => {
             if(!report) {
@@ -58,7 +57,7 @@ exports.findOneReport = (req, res) => {
         })
 }
 
-exports.findAllReports = (req, res) => {
+export const findAllReports = (req, res) => {
     reportModule.find()
         .sort({ timestaps: -1 })
         .then((reports) => {
@@ -71,7 +70,7 @@ exports.findAllReports = (req, res) => {
         })
 }
 
-exports.deleteReport = (req, res) => {
+export const deleteReport = (req, res) => {
     reportModule.findByIdAndRemove(req.query.reportId)
         .then((report) => {
             if(!report) {
@@ -92,7 +91,7 @@ exports.deleteReport = (req, res) => {
         })
 }
 
-exports.updateReport = (req, res) => {
+export const updateReport = (req, res) => {
     reportModule.findByIdAndUpdate(req.query.reportId, req.body, { new: true})
         .then((report) => {
             if(!report) {

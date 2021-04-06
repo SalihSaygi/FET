@@ -1,10 +1,10 @@
-const express = require('express')
+import express from 'express'
 const adminDashboardRouter = express.Router()
 
-const { ensureAdmin } = require('../../config/auth')
+import { ensureAdmin } from '../../config/ensureRoles'
 
-const dataRouter = require('../data.router')
+import dataRouter from './data.router'
 
 adminDashboardRouter.use('/data', ensureAdmin, dataRouter)
 
-module.exports = adminDashboardRouter
+export default adminDashboardRouter

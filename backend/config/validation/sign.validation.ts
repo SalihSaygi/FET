@@ -1,5 +1,6 @@
 import { check, validationResult } from 'express-validator/check'
 import { Request, Response, NextFunction } from 'express'
+import { MobilePhoneLocale } from 'express-validator/src/options';
 
 exports.signUpValid = [
     

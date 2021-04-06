@@ -1,9 +1,27 @@
-import mongoose = require('mongoose')
-import bcrypt = require('bcrypt')
+import { Document, Schema, model, Model } from 'mongoose'
+import bcrypt from 'bcrypt'
 
-const opts = { toJSON: { virtuals: true } }
+mongoose.set('toJSON', { virtuals: true });
 
-const UserSchema = new mongoose.Schema({
+interface IUserSchema extends Document {
+    nickname: string;
+    firstName: string;
+    lastName: string;
+    password: string;
+    hash: string;
+    salt: string;
+    googleId: string;
+    email: string;
+    phoneNumber: number;
+    currentRank: string;
+    role: string;
+    adress: string;
+    numberOfFindings: number;
+    profilePhoto: Buffer;
+    reports:
+}
+
+const UserSchema: Schema = new Schema({
     nickname: {
         type: String,
         required: true,
@@ -77,7 +95,7 @@ const UserSchema = new mongoose.Schema({
     },
     reports: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Report'
+        ref: 'PublicReport'
     }],
     age: {
         type: Number,
@@ -95,7 +113,7 @@ const UserSchema = new mongoose.Schema({
     },
 }, {
     timestamps: true,
-}, opts)
+})
 
 UserSchema.virtual('fullName').
   get(function() { return `${this.firstName} ${this.lastName}`; }).
@@ -108,9 +126,9 @@ UserSchema.pre('save', function(next){
     if(!this.isModified('password')) return next()
     bcrypt.genSalt(10, (err, salt) => {
         if(err) return next(err)
-        bcrypt.hash(User.password, salt, (err, hash) => {
+        bcrypt.hash(UserSchema.password, salt, (err, hash) => {
             if(err) return next(err)
-            User.password = hash
+            UserSchema.password = hash
             next()
         })
     })
@@ -122,4 +140,4 @@ UserSchema.methods.comparePassword = function comparePassword(candidatePassword,
     });
 };
 
-const User = mongoose.model('User', UserSchema)
+export const User: Model<IUserSchema> = mongoose.model('User', UserSchema)

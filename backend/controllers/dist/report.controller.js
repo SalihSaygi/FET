@@ -1,5 +1,6 @@
 "use strict";
 exports.__esModule = true;
+exports.updateReport = exports.deleteReport = exports.findAllReports = exports.findOneReport = exports.createReport = void 0;
 exports.createReport = function (req, res) {
     var report = new reportModule({
         title: req.body.title,

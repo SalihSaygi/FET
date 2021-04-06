@@ -1,11 +1,11 @@
-const express = require('express')
+import express from 'express'
 const userRoute = express.Router()
-const userMethods = require('../../controllers/user.controller')
-const { ensureUser } = require('../../config/ensureRoles')
-import {  } from '../../config/validation/sign.validation'
+import userMethods from '../../controllers/user.controller'
+import { ensureUser } from '../../config/ensureRoles'
+// import {  } from '../../config/validation/sign.validation'
 
 userRoute.get('/:userId', ensureUser, userMethods.findOneUser)
 userRoute.put('/:userId/edit', ensureUser, userMethods.updateUser)
 userRoute.delete('/:userId', ensureUser, userMethods.deleteUser)
 
-module.exports = userRoute
+export default userRoute
