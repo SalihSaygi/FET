@@ -1,4 +1,5 @@
 //Server Config
+
 import express, { json, urlencoded } from 'express'
 import { extname } from 'path'
 import { createServer } from 'http'
@@ -13,15 +14,16 @@ import pusher from 'pusher'
 import session from 'express-session'
 // import googlePassport from './config/passport-google'
 import { mongo, createConnection } from 'mongoose'
-import RedisClient from 'ioredis'
+import Redis from 'ioredis'
 const RedisStore = require('connect-redis')(session)
+import RedisRateStore from 'rate-limit-redis'
 import { REDIS_OPTIONS, SESSION_OPTIONS } from './config/redis'
 import grid from 'gridfs-stream'
 
 const app = express()
 const server = createServer(app)
 const io = require('socket.io').listen(server);
-//Server Config
+
 app.use(json())
 app.use(urlencoded({ extended: false }))
 app.use(cors({
@@ -36,18 +38,19 @@ import RateLimit from 'express-rate-limit'
 import SlowDown from "express-slow-down"
 import { RateLimiterMemory, BurstyRateLimiter } from 'rate-limiter-flexible'
 
-const clientLimit, clientSpeed = new RedisClient({ REDIS_OPTIONS })
+const RedisClient =  new Redis(REDIS_OPTIONS)
+
 const limiter = new RateLimit({
-    store: new RedisStore({
-      clientLimit
+    store: new RedisRateStore({
+      client: RedisClient
     }),
     windowMs: 15 * 60 * 1000, //15 minutes
     max: 50, // limit each IP to 100 requests per windowMs
     delayMs: 0 // disable delaying - full speed until the max limit is reached
 })
 const speedLimiter = new SlowDown({
-    store: new RedisStore({
-        clientSpeed
+    store: new RedisRateStore({
+        client: RedisClient
     }),
     windowMs: 15 * 60 * 1000, // 15 minutes
     delayAfter: 10, // allow 100 requests per 15 minutes, then...
@@ -68,15 +71,15 @@ const burstyLimiter = new BurstyRateLimiter(
 
 app.use(speedLimiter)
 app.use(limiter)
-app.use(burstyLimiter)
+// app.use(burstyLimiter)
 
 app.use(
     session({
       ...SESSION_OPTIONS,
-      secret: "nebakiyorsunlan",
+      secret: process.env.SESSION_SECRET as string,
       resave: false,
       saveUninitialized: true,
-      store: new RedisStore({ RedisClient }),
+      store: new RedisStore(RedisClient),
       cookie: {
           //lasts 1 day
         maxAge: 24*60*60*1000
@@ -86,15 +89,17 @@ app.use(
 
 const port = process.env.PORT
 
-const newPusher = new pusher({
-  appId: "1100018",
-  key: "f4284b71efae2bd5907f",
-  secret: "1fc28addaeb881ff768a",
-  cluster: "us3",
-  useTLS: true
-});
+//PUSHER API
 
-app.use(newPusher)
+// const newPusher = new pusher({
+//   appId: "1100018",
+//   key: "f4284b71efae2bd5907f",
+//   secret: "1fc28addaeb881ff768a",
+//   cluster: "us3",
+//   useTLS: true
+// });
+
+// app.use(newPusher)
 
 //Routes
 
@@ -130,11 +135,11 @@ app.get('/logout', ensureUser, function(req, res){
 app.post('/register', ensureGuest, createUser)
 
 //Location Middleware
-import location from './helpers/location.helper'
-app.use(location)
+// import location from './helpers/location.helper'
+// app.use(location)
 
 //SocketIO
-io.use(wrap(session({ secret: "cats" })));
+// io.use(wrap(session({ secret: "cats" })));
 
 io.sockets
     .on('connection', ({
@@ -147,47 +152,47 @@ io.sockets
 
 //ImageOrVideoStorage
 
-grid.mongo = mongoose.mongo
+// grid.mongo = mongoose.mongo
 
-const storageCon = createConnection(URI, {
-    useCreateIndex: true,
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-})
+// const storageCon = createConnection(URI, {
+//     useCreateIndex: true,
+//     useNewUrlParser: true,
+//     useUnifiedTopology: true
+// })
 
-storageCon.once('open', () => {
-    console.log('Storage Database connection has been established succesfully')
+// storageCon.once('open', () => {
+//     console.log('Storage Database connection has been established succesfully')
 
-    gfs = grid(storageCon.db, mongo)
-    gfs.collection('images')
-    gfs.collection('videos')
-})
+//     gfs = grid(storageCon.db, mongo)
+//     gfs.collection('images')
+//     gfs.collection('videos')
+// })
 
-const maxSize = 5 * 1000 * 1000;
+// const maxSize = 5 * 1000 * 1000;
 
-const storage = new gridFsStorage({
-    url: URI,
-    file: (req, file) => {
-        return new Promise((resolve, reject) => {{
-            const fileType = file.type
-            const filename = `${fileType}-${Date.now()}${extname(file.originalName)}`
+// const storage = new gridFsStorage({
+//     url: URI,
+//     file: (req, file) => {
+//         return new Promise((resolve, reject) => {{
+//             const fileType = file.type
+//             const filename = `${fileType}-${Date.now()}${extname(file.originalName)}`
             
-            const fileInfo={
-                filename: filename,
-                bucketName: 'sources'
-            }
+//             const fileInfo={
+//                 filename: filename,
+//                 bucketName: 'sources'
+//             }
 
-            resolve(fileInfo)
-        }
-    })
-    }
-})
+//             resolve(fileInfo)
+//         }
+//     })
+//     }
+// })
 
-const upload = multer({ storage })
+// const upload = multer({ storage })
 
-app.post('/upload/file', upload.single('file'), (req, res) => {
-    res.status(201).send(req.file)
-})
+// app.post('/upload/file', upload.single('file'), (req, res) => {
+//     res.status(201).send(req.file)
+// })
 
 app.use(initialize())
 app.use(_session())

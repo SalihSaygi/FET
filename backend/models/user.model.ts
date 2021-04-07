@@ -1,9 +1,27 @@
-import { Document, Schema, model, Model } from 'mongoose'
+import mongoose, { Document, Schema, model, Model, Types, Mongoose } from 'mongoose'
+import { NextFunction } from 'express'
 import bcrypt from 'bcrypt'
 
-mongoose.set('toJSON', { virtuals: true });
+// mongoose.set('toJSON', { virtuals: true });
 
-interface IUserSchema extends Document {
+//ENUMS
+
+enum currentRank {
+    Newbie = 'Newbie',
+    AnimalLover = 'Animal Lover',
+    FinderOfTheLosts = 'Finder of the Losts',
+    AnimalDetective = 'Animal Detective',
+}
+
+enum role {
+
+}
+
+enum pronouns {
+    
+}
+
+export interface IUserSchema extends Document {
     nickname: string;
     firstName: string;
     lastName: string;
@@ -13,12 +31,15 @@ interface IUserSchema extends Document {
     googleId: string;
     email: string;
     phoneNumber: number;
-    currentRank: string;
+    currentRank: currentRank;
     role: string;
     adress: string;
     numberOfFindings: number;
     profilePhoto: Buffer;
-    reports:
+    reports: Types.ObjectId;
+    age: number;
+    pronouns: string;
+    bio: string;
 }
 
 const UserSchema: Schema = new Schema({
@@ -122,11 +143,12 @@ UserSchema.virtual('fullName').
     const lastName = v.substring(v.indexOf(' ') + 1);
 })
 
-UserSchema.pre('save', function(next){
+UserSchema.pre<IUserSchema>('save', async function(next: NextFunction){
+    const user = this
     if(!this.isModified('password')) return next()
     bcrypt.genSalt(10, (err, salt) => {
         if(err) return next(err)
-        bcrypt.hash(UserSchema.password, salt, (err, hash) => {
+        bcrypt.hash(UserSchema.password, salt, (err: mongoose.Error, hash) => {
             if(err) return next(err)
             UserSchema.password = hash
             next()

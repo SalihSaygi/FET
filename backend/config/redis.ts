@@ -1,3 +1,5 @@
+import { IN_PROD } from './app'
+
 //SET TIMES
 
  const ONE_HOUR = 1000 * 60 * 60
@@ -29,12 +31,6 @@ export const {
     SESSION_SECRET = 'reallySecretSessionPass1',
     SESSION_NAME = 'SID',
     SESSION_IDLE_TIMEOUT = HALF_HOUR
-} = process.env
-
-export const { IN_PROD } = require('./serverConfig')
-
-export const {
-    NODE_ENV = 'development'
 } = process.env
 
 export const SESSION_ABSOLUTE_TIMEOUT = +(process.env.SESSION_ABSOLUTE_TIMEOUT || SIX_HOURS)

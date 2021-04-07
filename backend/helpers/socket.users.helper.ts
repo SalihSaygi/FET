@@ -1,7 +1,7 @@
 const users = [];
-
+const rooms = []
 // Join user to chat
-function userJoin(id, username, room) {
+export function userJoin(id, username, room) {
   const user = { id, username, room };
 
   users.push(user);
@@ -10,12 +10,12 @@ function userJoin(id, username, room) {
 }
 
 // Get current user
-function getCurrentUser(id) {
+export function getCurrentUser(id) {
   return users.find(user => user.id === id);
 }
 
 // User leaves chat
-function userLeave(id) {
+export function userLeave(id) {
   const index = users.findIndex(user => user.id === id);
 
   if (index !== -1) {
@@ -24,21 +24,13 @@ function userLeave(id) {
 }
 
 // Get room users
-function getRoomUsers(room) {
+export function getRoomUsers(room) {
   return users.filter(user => user.room === room);
 }
 
-function getUserRooms(socket) {
+export function getUserRooms(socket) {
     return Object.entries(rooms).reduce((names, [name, room]) => {
       if (room.users[socket.id] != null) names.push(name)
       return names
 }, [])
 }
-
-module.exports = {
-  userJoin,
-  getCurrentUser,
-  userLeave,
-  getRoomUsers,
-  getUserRooms
-};

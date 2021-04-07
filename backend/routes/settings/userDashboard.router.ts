@@ -1,11 +1,11 @@
-const express = require('express')
-const userDashboardRouter = express.Router()
+// const express = require('express')
+// const userDashboardRouter = express.Router()
 
-const { ensureUser } = require('../../config/auth')
+// const { ensureUser } = require('../../config/auth')
 
-const userRouter = require('../general/user.route')
-const reportRouter = require('./report.route')
+// const userRouter = require('../general/user.route')
+// const reportRouter = require('./report.route')
 
-userDashboardRouter.get('/', ensureUser, (req, res) => {
-    res.send('userDashboardRouter')
-})
+// userDashboardRouter.get('/', ensureUser, (req, res) => {
+//     res.send('userDashboardRouter')
+// })
